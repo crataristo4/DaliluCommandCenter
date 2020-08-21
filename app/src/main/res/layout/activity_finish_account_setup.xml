@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.activities.FinishAccountSetupActivity">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolBarCompleteProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="?attr/colorPrimary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:title="@string/accountSetUp" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolBarCompleteProfile">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgUploadPhoto"
+                        android:layout_width="@dimen/TwoHundredDp"
+                        android:layout_height="@dimen/TwoHundredDp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/defaultavatar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <com.google.android.material.floatingactionbutton.FloatingActionButton
+                        android:id="@+id/fabUploadPhoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:backgroundTint="@color/amber"
+                        app:layout_constraintBottom_toBottomOf="@+id/imgUploadPhoto"
+                        app:layout_constraintEnd_toEndOf="@+id/imgUploadPhoto"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toEndOf="@+id/imgUploadPhoto"
+                        app:layout_constraintTop_toTopOf="@+id/imgUploadPhoto"
+                        app:layout_constraintVertical_bias="1.0"
+                        app:srcCompat="@drawable/ic_camera" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="vertical"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/imgUploadPhoto">
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/txtUserName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/eightDp"
+                            android:textColorHint="@color/black"
+                            android:background="@drawable/textinputbackground"
+                            app:counterEnabled="true"
+                            app:counterMaxLength="10"
+                            app:helperTextTextColor="@color/white">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enterUserName"
+                                android:textColor="@color/black"
+                                android:inputType="textCapWords"
+                                android:maxLength="10"
+                                android:selectAllOnFocus="true"
+                                android:singleLine="true" />
+
+                            <requestFocus />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <TextView
+                            android:id="@+id/textView2"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/eightDp"
+                            android:padding="@dimen/eightDp"
+                            android:text="@string/if_you_choose_not_to_provide_a_name_a_random_name_will_be_generated_for_you_as_a_user_name"
+                            android:textColor="@color/colorRed"
+                            android:textSize="18sp" />
+
+                        <Button
+                            android:id="@+id/btnSave"
+                            android:layout_width="300dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_margin="@dimen/twentyFourDp"
+                            android:layout_marginBottom="8dp"
+                            android:background="@drawable/curvedbuttonstyle"
+                            android:text="@string/save"
+                            android:textColor="@android:color/background_light" />
+
+
+                    </LinearLayout>
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </ScrollView>
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
