@@ -95,5 +95,10 @@ dependencies {
     //exo player
     implementation 'com.google.android.exoplayer:exoplayer:2.11.7'
 
+    //ripple background
+    implementation 'com.skyfishjy.ripplebackground:library:1.0.1'
+    //map clustering
+    implementation 'net.sharewire:google-maps-clustering:0.1.3'
+
 
 }

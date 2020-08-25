@@ -145,6 +145,7 @@ public class HomeFragment extends Fragment {
                 long timeStamp = alertItems.getTimeStamp();
                 String userPhotoUrl = alertItems.getUserPhotoUrl();
                 String url = alertItems.getUrl();
+                boolean isSolved = alertItems.isSolved();
 
                 String id = ds.getId();
                 String dateReported = alertItems.getDateReported();
@@ -153,7 +154,7 @@ public class HomeFragment extends Fragment {
 
 
                     arrayList.add(new AlertItems(AppConstants.IMAGE_TYPE,
-                            userName, userPhotoUrl, url, timeStamp, address, id, dateReported));
+                            userName, userPhotoUrl, url, timeStamp, address, id, dateReported,isSolved));
 
                 }
                 //group data by Videos

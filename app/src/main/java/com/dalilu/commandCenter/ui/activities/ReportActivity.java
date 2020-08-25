@@ -240,6 +240,7 @@ public class ReportActivity extends AppCompatActivity {
                 alertItems.put("phoneNumber", phoneNumber);
                 alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
                 alertItems.put("dateReported", dateReported);
+                alertItems.put("isSolved", false);
 
 
                 //fire store cloud store

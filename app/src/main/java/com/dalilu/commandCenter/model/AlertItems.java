@@ -3,6 +3,9 @@ package com.dalilu.commandCenter.model;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.firestore.GeoPoint;
+
 public class AlertItems extends BaseObservable {
     public String userName;
     public String url;
@@ -17,13 +20,15 @@ public class AlertItems extends BaseObservable {
     public String status;
     public String id;
     public int type, audioLength;
+    public boolean isSolved ;
+    public GeoPoint coordinates;
 
     public AlertItems() {
     }
 
     //Image type constructor
     public AlertItems(int type, String userName, String userPhotoUrl, String url, Object timeStamp,
-                      String address, String id, String dateReported) {
+                      String address, String id, String dateReported,boolean isSolved) {
 
         this.type = type;
         this.userName = userName;
@@ -33,6 +38,7 @@ public class AlertItems extends BaseObservable {
         this.address = address;
         this.id = id;
         this.dateReported = dateReported;
+        this.isSolved = isSolved;
 
     }
 
@@ -172,5 +178,21 @@ public class AlertItems extends BaseObservable {
 
     public void setAudioLength(int audioLength) {
         this.audioLength = audioLength;
+    }
+
+    public boolean isSolved() {
+        return isSolved;
+    }
+
+    public void setSolved(boolean solved) {
+        isSolved = solved;
+    }
+
+    public GeoPoint getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(GeoPoint coordinates) {
+        this.coordinates = coordinates;
     }
 }

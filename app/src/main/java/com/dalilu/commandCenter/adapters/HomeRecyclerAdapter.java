@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,9 @@ import com.dalilu.commandCenter.utils.GetTimeAgo;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.skyfishjy.library.RippleBackground;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
@@ -161,6 +164,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into((((ImageTypeViewHolder) holder).imageTypeBinding.imgContentPhoto));
 
+                    ((ImageTypeViewHolder) holder).isCrimeSolved(object.isSolved());
+
 
                     ((ImageTypeViewHolder) holder).numOfComments(((ImageTypeViewHolder) holder).txtComments, object.getId());
 
@@ -237,12 +242,18 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final ImageTypeBinding imageTypeBinding;
         final ImageView imageView;
         final TextView txtComments;
+        final RippleBackground rippleBackground;
+        MediaPlayer mediaPlayer;
+
 
         ImageTypeViewHolder(@NonNull ImageTypeBinding imageTypeBinding) {
             super(imageTypeBinding.getRoot());
             this.imageTypeBinding = imageTypeBinding;
             imageView = imageTypeBinding.imgContentPhoto;
             txtComments = imageTypeBinding.txtComments;
+            rippleBackground = imageTypeBinding.rippleContent;
+          //  rippleBackground.startRippleAnimation();
+            mediaPlayer = MediaPlayer.create(imageTypeBinding.getRoot().getContext(), R.raw.alarm);
 
 
         }
@@ -260,6 +271,56 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 }
 
             });
+
+
+        }
+
+
+        private void isCrimeSolved(boolean isSolved){
+
+            if (!isSolved){
+
+                rippleBackground.setVisibility(View.VISIBLE);
+                rippleBackground.startRippleAnimation();
+                if (!mediaPlayer.isPlaying()){
+                    try {
+                     //   mediaPlayer.reset();
+                        mediaPlayer.start();
+                        mediaPlayer.setLooping(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+
+
+
+            }else {
+
+                rippleBackground.setVisibility(View.GONE);
+                rippleBackground.stopRippleAnimation();
+                try {
+                    if (mediaPlayer.isPlaying()){
+                        mediaPlayer.reset();
+                        mediaPlayer.stop();
+
+                        mediaPlayer.setLooping(false);
+                    }
+                }catch (Exception e){
+
+                    e.printStackTrace();
+                }
+
+
+
+
+                // mediaPlayer = null;
+                //      mediaPlayer.release();
+
+
+            }
 
 
         }
