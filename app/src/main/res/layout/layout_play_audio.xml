@@ -44,13 +44,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
-            android:drawableStart="@drawable/ic_baseline_access_time_24"
             android:drawablePadding="@dimen/eightDp"
             app:layout_constraintBottom_toBottomOf="@+id/imgPlayBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/seekBar"
-            app:layout_constraintTop_toTopOf="@+id/imgPlayBtn" />
+            app:layout_constraintTop_toTopOf="@+id/imgPlayBtn"
+            app:drawableStartCompat="@drawable/ic_baseline_access_time_24" />
 
         <SeekBar
             android:id="@+id/seekBar"

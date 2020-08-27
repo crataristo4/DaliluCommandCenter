@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.MediaController;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -45,7 +44,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.skyfishjy.library.RippleBackground;
 
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 
@@ -243,7 +241,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final ImageView imageView;
         final TextView txtComments;
         final RippleBackground rippleBackground;
-        MediaPlayer mediaPlayer;
+        final MediaPlayer mediaPlayer;
 
 
         ImageTypeViewHolder(@NonNull ImageTypeBinding imageTypeBinding) {

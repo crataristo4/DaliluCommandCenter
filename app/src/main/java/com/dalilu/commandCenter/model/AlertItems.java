@@ -3,7 +3,6 @@ package com.dalilu.commandCenter.model;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.google.firebase.firestore.GeoPoint;
 
 public class AlertItems extends BaseObservable {

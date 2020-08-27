@@ -4,14 +4,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -24,6 +27,7 @@ import androidx.navigation.ui.NavigationUI;
 
 
 import com.dalilu.commandCenter.R;
+import com.dalilu.commandCenter.bottomsheets.WelcomeNoticeBottomSheet;
 import com.dalilu.commandCenter.databinding.ActivityMainBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
@@ -95,7 +99,7 @@ public class MainActivity extends BaseActivity {
     public static String mLastUpdateTime, knownName, state, country, phoneNumber, userId;
     public static double latitude, longitude;
     private Geocoder geocoder;
-    private CollectionReference alertsCollectionReference, locationCollectionDbRef;
+    private CollectionReference alertsCollectionReference;
     FABsMenu faBsMenu;
 
     public static Context getAppContext() {
@@ -116,7 +120,7 @@ public class MainActivity extends BaseActivity {
 
         DatabaseReference locationDbRef = FirebaseDatabase.getInstance().getReference().child("Locations");
         alertsCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
-        locationCollectionDbRef = FirebaseFirestore.getInstance().collection("Locations");
+        CollectionReference locationCollectionDbRef = FirebaseFirestore.getInstance().collection("Locations");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
@@ -133,14 +137,13 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initViews() {
-        faBsMenu = activityMainBinding.fabsMenu;
         BottomNavigationView navView = activityMainBinding.navView;
         Menu menu = navView.getMenu();
         MenuItem menuItemHome = menu.findItem(R.id.navigation_home);
 
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_profile)
+                R.id.navigation_home, R.id.navigation_maps)
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -155,7 +158,7 @@ public class MainActivity extends BaseActivity {
 
         BadgeDrawable badgeDrawableHome = navView.getOrCreateBadge(menuItemHome.getItemId());
 
-        activityMainBinding.logOut.setOnClickListener(view -> DisplayViewUI.displayAlertDialog(view.getContext(),
+      /*  activityMainBinding.logOut.setOnClickListener(view -> DisplayViewUI.displayAlertDialog(view.getContext(),
                 getString(R.string.logOut), getString(R.string.xcvv),
                 getString(R.string.logMeOut), getString(R.string.cancel),
                 (dialogInterface, i) -> {
@@ -171,7 +174,7 @@ public class MainActivity extends BaseActivity {
 
 
                 }));
-
+*/
 
         Intent getUserDetailsIntent = getIntent();
         if (getUserDetailsIntent != null) {
@@ -191,10 +194,6 @@ public class MainActivity extends BaseActivity {
                 badgeDrawableHome.setNumber(task.getResult().size());
 
         });
-
-        activityMainBinding.report.setOnClickListener(v -> myIntent(ReportActivity.class));
-
-        activityMainBinding.editProfile.setOnClickListener(view -> myIntent(EditProfileActivity.class));
 
 
     }
@@ -219,6 +218,20 @@ public class MainActivity extends BaseActivity {
 
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.switch_list_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.reportMenu){
+            myIntent(ReportActivity.class);
+        }
+        return true;
+    }
 
     /**
      * Updates fields based on data stored in the bundle.
@@ -450,19 +463,11 @@ public class MainActivity extends BaseActivity {
                 });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
 
-
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (faBsMenu.isExpanded()) {
-            faBsMenu.collapse();
-        }
         if (checkPermissions()) {
             buildLocationSettingsRequest();
             startLocationUpdates();

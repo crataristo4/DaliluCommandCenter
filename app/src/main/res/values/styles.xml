@@ -16,22 +16,6 @@
     </style>
 
 
-    <style name="DialogStyle" parent="Theme.MaterialComponents.Light.BottomSheetDialog">
-        <item name="android:windowIsFloating">false</item>
-        <item name="android:windowSoftInputMode">adjustResize</item>
-        <item name="bottomSheetStyle">@style/BottomSheet</item>
-
-    </style>
-
-    <style name="BottomSheet" parent="@style/Widget.Design.BottomSheet.Modal">
-        <item name="android:background">@drawable/bottomsheetbg</item>
-    </style>
-
-
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />
-
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />
-
     <!-- theme for tool bar. -->
     <style name="ToolBarTheme" parent="ThemeOverlay.MaterialComponents.Light">
         <!--<item name="background">@color/colorPrimaryDark</item>-->
@@ -41,10 +25,6 @@
 
     </style>
 
-    <style name="CustomRatingBar" parent="Theme.MaterialComponents">
-        <item name="colorControlNormal">@color/amber</item>
-        <item name="colorControlActivated">@color/purple</item>
-    </style>
     <!--global animation effect for all activities-->
     <style name="CustomActivityAnimation" parent="@android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/slideinright</item>

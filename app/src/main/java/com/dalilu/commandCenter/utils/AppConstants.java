@@ -6,6 +6,7 @@ import com.dalilu.commandCenter.R;
 public final class AppConstants {
     public static final String PREFS = "prefs";
     public static final String IS_DIALOG_SHOWN = "dialogShown";
+    public static final String IS_PAGE_SWITCHED = "isPageSwitched";
     public static final String IS_LOCATION_SHARED = "location sharing";
     public static final int VIDEO_TYPE = 0;
     public static final int IMAGE_TYPE = 1;

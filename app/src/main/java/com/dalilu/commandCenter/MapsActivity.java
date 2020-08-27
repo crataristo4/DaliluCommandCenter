@@ -3,27 +3,20 @@ package com.dalilu.commandCenter;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.Menu;
+import android.view.MenuItem;
 
-import com.bumptech.glide.Glide;
 import com.dalilu.commandCenter.model.AlertItems;
-import com.dalilu.commandCenter.model.SampleClusterItem;
-import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
-import com.dalilu.commandCenter.utils.RandomLocationGenerator;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -31,14 +24,6 @@ import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import net.sharewire.googlemapsclustering.Cluster;
-import net.sharewire.googlemapsclustering.ClusterManager;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -53,12 +38,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             new LatLng(24.9745740829, 4.27020999514));
 
 
-    /*  private static final String TAG = MapsActivity.class.getSimpleName();
-
-    private static final LatLngBounds NETHERLANDS = new LatLngBounds(
-            new LatLng(50.77083, 3.57361), new LatLng(53.35917, 7.10833));
-
-*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
     app:startDestination="@+id/navigation_home">
 
     <fragment
@@ -12,9 +11,9 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_profile"
-        android:name="com.dalilu.commandCenter.ui.profile.ProfileFragment"
-        android:label="@string/profile"
+        android:id="@+id/navigation_maps"
+        android:name="com.dalilu.commandCenter.ui.map.MapFragment"
+        android:label="@string/title_activity_maps"
         tools:layout="@layout/fragment_map" />
 
 
