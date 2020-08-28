@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,14 +15,12 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.adapters.HomeRecyclerAdapter;
 import com.dalilu.commandCenter.databinding.FragmentHomeBinding;
 import com.dalilu.commandCenter.model.AlertItems;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -42,10 +39,6 @@ public class HomeFragment extends Fragment {
     private final ArrayList<AlertItems> arrayList = new ArrayList<>();
     private LinearLayoutManager layoutManager;
     private Parcelable mState;
-    private DocumentSnapshot mLastResult;
-    ProgressBar pbHomeLoading;
-    private boolean isScrolling = false;
-    private boolean isLastItemReached = false;
     private final CollectionReference collectionReference = FirebaseFirestore
             .getInstance()
             .collection("Alerts");

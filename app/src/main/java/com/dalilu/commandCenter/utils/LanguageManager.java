@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.preference.PreferenceManager;
 
 import java.util.Locale;
@@ -42,11 +41,10 @@ public class LanguageManager {
      *
      * @param mContext
      * @param mLocaleKey
-     * @return
      */
-    public static Context setNewLocale(Context mContext, String mLocaleKey) {
+    public static void setNewLocale(Context mContext, String mLocaleKey) {
         setLanguagePref(mContext, mLocaleKey);
-        return updateResources(mContext, mLocaleKey);
+        updateResources(mContext, mLocaleKey);
     }
 
     /**
@@ -89,14 +87,4 @@ public class LanguageManager {
         return context;
     }
 
-    /**
-     * get current locale
-     *
-     * @param res
-     * @return
-     */
-    public static Locale getLocale(Resources res) {
-        Configuration config = res.getConfiguration();
-        return Build.VERSION.SDK_INT >= 24 ? config.getLocales().get(0) : config.locale;
-    }
 }

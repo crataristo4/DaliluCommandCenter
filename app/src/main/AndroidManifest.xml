@@ -78,15 +78,6 @@
             android:name=".ui.activities.ReportActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".ui.activities.FinishAccountSetupActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.activities.EditProfileActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".auth.PhoneAuthActivity" >
-
-        </activity>
         <activity android:name=".ui.activities.CommentsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>

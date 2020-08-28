@@ -73,10 +73,6 @@ public class AlertItems extends BaseObservable {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
     @Bindable
     public String getUserName() {
         return userName;
@@ -91,57 +87,17 @@ public class AlertItems extends BaseObservable {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getAudioUrl() {
-        return audioUrl;
-    }
-
-    public void setAudioUrl(String audioUrl) {
-        this.audioUrl = audioUrl;
-    }
-
     public String getUserPhotoUrl() {
         return userPhotoUrl;
-    }
-
-    public void setUserPhotoUrl(String userPhotoUrl) {
-        this.userPhotoUrl = userPhotoUrl;
     }
 
     public long getTimeStamp() {
         return (long) timeStamp;
     }
 
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(double longitude) {
-        this.longitude = longitude;
-    }
-
     @Bindable
     public String getDateReported() {
         return dateReported;
-    }
-
-    public void setDateReported(String dateReported) {
-        this.dateReported = dateReported;
     }
 
     @Bindable
@@ -158,40 +114,12 @@ public class AlertItems extends BaseObservable {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    @Bindable
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public int getAudioLength() {
-        return audioLength;
-    }
-
-    public void setAudioLength(int audioLength) {
-        this.audioLength = audioLength;
-    }
-
     public boolean isSolved() {
         return isSolved;
-    }
-
-    public void setSolved(boolean solved) {
-        isSolved = solved;
     }
 
     public GeoPoint getCoordinates() {
         return coordinates;
     }
 
-    public void setCoordinates(GeoPoint coordinates) {
-        this.coordinates = coordinates;
-    }
 }

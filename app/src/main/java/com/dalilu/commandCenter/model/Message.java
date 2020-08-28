@@ -37,28 +37,12 @@ public class Message extends BaseObservable {
 
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
     public String getUrl() {
         return url;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
     public long getTimeStamp() {
         return (long) timeStamp;
-    }
-
-    public void setTimeStamp(long timeStamp) {
-        this.timeStamp = timeStamp;
     }
 
 
@@ -71,23 +55,10 @@ public class Message extends BaseObservable {
         this.userName = userName;
     }
 
-    @Bindable
-    public String getReceiverName() {
-        return receiverName;
-    }
-
-    public void setReceiverName(String receiverName) {
-        this.receiverName = receiverName;
-    }
-
 
     @Bindable
     public String getMessageDateTime() {
         return messageDateTime;
-    }
-
-    public void setMessageDateTime(String messageDateTime) {
-        this.messageDateTime = messageDateTime;
     }
 
     @Bindable

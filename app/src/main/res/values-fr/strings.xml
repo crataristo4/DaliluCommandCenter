@@ -16,19 +16,11 @@
     <string name="sorryVidFailed">Desole! Echec d\'enregistrer la video</string>
     <string name="title_activity_maps">Carte</string>
     <string name="reportSuccess">Information transmis avec succes</string>
-    <string name="done">Termine</string>
     <string name="next">Suivant</string>
     <string name="phoneNumber">Numero de Telephone</string>
-    <string name="confirmCode">Confirmer le code</string>
     <string name="verify">Verifier</string>
-    <string name="phoneRequired">Le numero de telephone est demande pour continuer</string>
-    <string name="selectLanguage">Choisissez la langue s\'il vous plait</string>
-    <string name="plsWait">Verification en cours. Attendez s\'il vous plait</string>
     <string name="noInternet">Aucune connexion internet n\'est necessaire. Contactez votre fournisseur de service si le probleme persiste</string>
-    <string name="resend_code">Renvoyez le !!code!!</string>
-    <string name="codeShort">Code trop court.</string>
     <string name="phoneReq">Numero de telephone obligatoire</string>
-    <string name="verCode">Verifiez. Le code est envoye par sms!!!!!</string>
     <string name="welcome">Bienvenue sur Dalilu</string>
     <string name="welcomeNote">
         <![CDATA[
@@ -48,27 +40,17 @@
         ]]>
     </string>
     <string name="permission_rationale">Autorisation de localisation est obligatoire pour reperer l\'activite sur la carte</string>
-    <string name="accountSetUp">Parametre de compte</string>
-    <string name="enterName">Entrer le nom</string>
-    <string name="save">Enregistrer</string>
-    <string name="saveDetails">"Engeristrement des details. Attendez SVP. "</string>
     <string name="successFull">Succes</string>
     <string name="continueSetUp">Continuez</string>
     <string name="grantPerm">Autorisation accordee</string>
     <string name="ok">OK</string>
     <string name="errMsg">Les parametres de localisation sont inexacts et ne peuvent pas…</string>
     <string name="fixIn">"Ils sont corriges ici. Dans les parametres. "</string>
-    <string name="logOut">Se deconnecter</string>
     <string name="loc">Localisation: \n</string>
     <string name="dt">Date renseignee: \n</string>
     <string name="type_your_comments_here">Tapez vos commentaires ici.</string>
     <string name="upload">Retransmettez</string>
     <string name="reportAct">Rapportez une activite</string>
-    <string name="editProfile">Editez le profil</string>
-    <string name="searchContact">Recherchez un contact</string>
-    <string name="if_you_choose_not_to_provide_a_name_a_random_name_will_be_generated_for_you_as_a_user_name">"Si vous decidez de ne pas donner votre nom, l'application donnera un nom par defaut "</string>
-    <string name="enterUserName">Entrez votre nom (optionel)</string>
-    <string name="plsSlct">Choisissez une photo SVP</string>
     <string-array name="selectLanguage">
         <item>Please select language</item>
         <item>English</item>

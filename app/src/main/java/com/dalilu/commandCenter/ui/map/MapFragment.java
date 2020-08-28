@@ -26,18 +26,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.ArrayList;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private final CollectionReference collectionReference = FirebaseFirestore
             .getInstance()
             .collection("Alerts");
-    ListenerRegistration registration;
     private GoogleMap mMap;
     private MarkerOptions marker;
     private static final String TAG = "MapsActivity";
@@ -86,17 +82,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.setOnMapLoadedCallback(() -> mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(MALI, 0)));
 
         Query query = collectionReference.orderBy("timeStamp");
-        registration  = query.addSnapshotListener((queryDocumentSnapshots, e) -> {
-            if (e != null) {
-                Log.w(TAG, "Listen failed.", e);
-                return;
-            }
-            // arrayList.clear();
-            assert queryDocumentSnapshots != null;
-            for (QueryDocumentSnapshot ds : queryDocumentSnapshots) {
+         query.addSnapshotListener((queryDocumentSnapshots, e) -> {
+             if (e != null) {
+                 Log.w(TAG, "Listen failed.", e);
+                 return;
+             }
+             // arrayList.clear();
+             assert queryDocumentSnapshots != null;
+             for (QueryDocumentSnapshot ds : queryDocumentSnapshots) {
 
-                AlertItems alertItems = ds.toObject(AlertItems.class);
-                //get data from model
+                 AlertItems alertItems = ds.toObject(AlertItems.class);
+                 //get data from model
                 GeoPoint geoPoint = alertItems.getCoordinates();
                 String address = alertItems.getAddress();
                 String userName = alertItems.getUserName();

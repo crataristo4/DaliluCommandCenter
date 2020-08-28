@@ -4,17 +4,14 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -25,9 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-
 import com.dalilu.commandCenter.R;
-import com.dalilu.commandCenter.bottomsheets.WelcomeNoticeBottomSheet;
 import com.dalilu.commandCenter.databinding.ActivityMainBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
@@ -43,7 +38,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
@@ -52,8 +46,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
-
-import jahirfiquitiva.libs.fabsmenu.FABsMenu;
 
 public class MainActivity extends BaseActivity {
 
@@ -100,7 +92,6 @@ public class MainActivity extends BaseActivity {
     public static double latitude, longitude;
     private Geocoder geocoder;
     private CollectionReference alertsCollectionReference;
-    FABsMenu faBsMenu;
 
     public static Context getAppContext() {
         return (Context) mContext;
@@ -199,9 +190,9 @@ public class MainActivity extends BaseActivity {
     }
 
 
-    void myIntent(@NonNull Class ctx) {
+    void myIntent() {
 
-        Intent intent = new Intent(this, ctx);
+        Intent intent = new Intent(this, ReportActivity.class);
         intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
         intent.putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl);
         intent.putExtra(AppConstants.USER_NAME, userName);
@@ -228,7 +219,7 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.reportMenu){
-            myIntent(ReportActivity.class);
+            myIntent();
         }
         return true;
     }

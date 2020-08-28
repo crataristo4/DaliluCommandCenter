@@ -22,7 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.adapters.CommentsAdapter;
 import com.dalilu.commandCenter.model.Message;
@@ -31,9 +30,7 @@ import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.dalilu.commandCenter.utils.FileUtils;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
 import com.dalilu.commandCenter.utils.PermissionUtils;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
@@ -60,16 +57,13 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 public class CommentsActivity extends AppCompatActivity {
     private String getAlertItemId, getAlertPhotoUrl, getAddress, getDatePosted;
     private CommentsAdapter adapter;
-    private DatabaseReference databaseReference;
     private EmojiconEditText emojiconEditText;
     private ArrayList<Message> commentList;
     private static final String[] WRITE_EXTERNAL_PERMISSION = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private static final String[] RECORD_AUDIO_PERMISSION = new String[]{Manifest.permission.RECORD_AUDIO};
     private static final int RECORD_AUDIO = 3;
-    String randomId;
     final String name = MainActivity.userName;
     String dateTime;
-    String userId = MainActivity.userId;
     private MediaRecorder mediaRecorder;
     private boolean recording;
     private String recordPath;
@@ -78,11 +72,7 @@ public class CommentsActivity extends AppCompatActivity {
     private StorageReference filePath;
     private static final String TAG = "CommentsActivity";
     private ListenerRegistration registration;
-    private DocumentSnapshot mLastResult;
-    private boolean isScrolling = false;
-    private boolean isLastItemReached = false;
     private CollectionReference commentsRef;
-    private DocumentReference documentReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

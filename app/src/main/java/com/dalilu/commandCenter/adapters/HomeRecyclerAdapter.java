@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -28,13 +27,11 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
-
 import com.dalilu.commandCenter.Dalilu;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ImageTypeBinding;
 import com.dalilu.commandCenter.databinding.VideoTypeBinding;
 import com.dalilu.commandCenter.model.AlertItems;
-
 import com.dalilu.commandCenter.ui.activities.CommentsActivity;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
@@ -217,7 +214,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //view holder for videos
     static class VideoTypeViewHolder extends RecyclerView.ViewHolder {
         final VideoTypeBinding videoTypeBinding;
-        final TextView txtComments;
         final VideoView videoView;
         final FrameLayout frameLayout;
 
@@ -225,7 +221,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         VideoTypeViewHolder(@NonNull VideoTypeBinding videoTypeBinding) {
             super(videoTypeBinding.getRoot());
             this.videoTypeBinding = videoTypeBinding;
-            txtComments = videoTypeBinding.txtComments;
             videoView = videoTypeBinding.videoContentPreview;
             frameLayout = videoTypeBinding.controllerAnchor;
 
@@ -238,7 +233,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     //view holder for images
     static class ImageTypeViewHolder extends RecyclerView.ViewHolder {
         final ImageTypeBinding imageTypeBinding;
-        final ImageView imageView;
         final TextView txtComments;
         final RippleBackground rippleBackground;
         final MediaPlayer mediaPlayer;
@@ -247,7 +241,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         ImageTypeViewHolder(@NonNull ImageTypeBinding imageTypeBinding) {
             super(imageTypeBinding.getRoot());
             this.imageTypeBinding = imageTypeBinding;
-            imageView = imageTypeBinding.imgContentPhoto;
             txtComments = imageTypeBinding.txtComments;
             rippleBackground = imageTypeBinding.rippleContent;
           //  rippleBackground.startRippleAnimation();

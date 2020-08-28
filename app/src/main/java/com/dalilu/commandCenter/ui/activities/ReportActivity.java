@@ -21,7 +21,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.bumptech.glide.Glide;
-
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityReportBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
@@ -53,7 +52,6 @@ import java.util.UUID;
 
 public class ReportActivity extends AppCompatActivity {
 
-    private static final String TAG = "ReportActivity";
     private static String imageStoragePath;
     ActivityReportBinding activityReportBinding;
     private StorageReference filePath;

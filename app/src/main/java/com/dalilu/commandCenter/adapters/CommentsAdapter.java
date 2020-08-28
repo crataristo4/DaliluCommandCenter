@@ -7,14 +7,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 
 import com.dalilu.commandCenter.Dalilu;
 import com.dalilu.commandCenter.R;
@@ -157,15 +155,11 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         final LayoutPlayAudioBinding layoutPlayAudioBinding;
         final ImageView playAudio;
-        final TextView txtDateTime;
-        final SeekBar audioSeekBar;
 
         AudioViewHolder(@NonNull LayoutPlayAudioBinding layoutPlayAudioBinding) {
             super(layoutPlayAudioBinding.getRoot());
             this.layoutPlayAudioBinding = layoutPlayAudioBinding;
             playAudio = layoutPlayAudioBinding.imgPlayBtn;
-            txtDateTime = layoutPlayAudioBinding.txtDataTime;
-            audioSeekBar = layoutPlayAudioBinding.seekBar;
 
 
         }

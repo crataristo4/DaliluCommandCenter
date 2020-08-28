@@ -10,7 +10,6 @@ import android.view.animation.AnimationUtils;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.auth.RegisterPhoneNumberActivity;
 import com.dalilu.commandCenter.databinding.ActivitySplashScreenBinding;
@@ -82,7 +81,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Log.i("Id: ", uid);
 
                 // usersDbRef = FirebaseDatabase.getInstance().getReference().child("Users");
-                usersCollectionRef = FirebaseFirestore.getInstance().collection("Users");
+                usersCollectionRef = FirebaseFirestore.getInstance().collection("Command Center");
 
                 usersCollectionRef.get().addOnCompleteListener(task -> {
 
@@ -95,9 +94,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                                 if (task1.isSuccessful()) {
                                     DocumentSnapshot document = task1.getResult();
                                     if (document != null && document.exists()) {
-                                        //Log.d("userName", Objects.requireNonNull(document.getString("userName")));
-                                        //Log.d("phone", Objects.requireNonNull(document.getString("phoneNumber")));
-                                        //Log.d("photo", Objects.requireNonNull(document.getString("userPhotoUrl")));
 
                                         userPhotoUrl = Objects.requireNonNull(document.getString("userPhotoUrl"));
                                         userName = Objects.requireNonNull(document.getString("userName"));
@@ -109,7 +105,9 @@ public class SplashScreenActivity extends AppCompatActivity {
                                         intent.putExtra(AppConstants.USER_NAME, userName);
                                         intent.putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl);
 
-                                    } else {
+                                    }
+
+                                 /*   else {
 
                                         intent = new Intent(SplashScreenActivity.this, FinishAccountSetupActivity.class);
                                         intent.putExtra(AppConstants.UID, uid);
@@ -117,7 +115,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
 
-                                    }
+                                    }*/
 
                                     startActivity(intent);
                                     SplashScreenActivity.this.finishAffinity();

@@ -11,17 +11,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.DataBindingUtil;
 
-
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityVerifyPhoneNumberBinding;
-import com.dalilu.commandCenter.ui.activities.FinishAccountSetupActivity;
+import com.dalilu.commandCenter.ui.activities.MainActivity;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -31,7 +36,8 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     AppCompatEditText edtCode;
     String phoneNumber;
-
+    String imageUrl;
+    private CollectionReference commandCenterRef;
     private String uid;
 
     @Override
@@ -39,6 +45,11 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         activityVerifyPhoneNumberBinding = DataBindingUtil.setContentView(this, R.layout.activity_verify_phone_number);
         mAuth = FirebaseAuth.getInstance();
+
+        commandCenterRef = FirebaseFirestore.getInstance().collection("Command Center");
+        //storage reference
+        StorageReference mStorageReference = FirebaseStorage.getInstance().getReference("command center");
+        imageUrl = "https://firebasestorage.googleapis.com/v0/b/dalilu-app.appspot.com/o/command%20center%2Fcc.jpg?alt=media&token=cc2872f4-7423-4198-a8f6-7884ce7c0064";
 
 
         Intent intent = getIntent();
@@ -71,6 +82,7 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
                         mAuth.signInWithCredential(credential).addOnSuccessListener(authResult -> {
 
                             uid = Objects.requireNonNull(mAuth.getCurrentUser()).getUid();
+
                             gotoFinishAccount(uid);
 
                         }).addOnFailureListener(e -> DisplayViewUI.displayToast(VerifyPhoneNumberActivity.this, e.getMessage()));
@@ -119,7 +131,15 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
     }
 
     void gotoFinishAccount(String id) {
-        Intent intent1 = new Intent(VerifyPhoneNumberActivity.this, FinishAccountSetupActivity.class);
+        Map<String, Object> accountInfo = new HashMap<>();
+        accountInfo.put("userPhotoUrl", imageUrl);
+        accountInfo.put("userName", "Command Center");
+        accountInfo.put("phoneNumber", phoneNumber);
+        accountInfo.put("userId", id);
+
+        commandCenterRef.document(uid).set(accountInfo);
+
+        Intent intent1 = new Intent(VerifyPhoneNumberActivity.this, MainActivity.class);
         intent1.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
         intent1.putExtra(AppConstants.UID, id);
         startActivity(intent1);

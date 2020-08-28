@@ -5,29 +5,8 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 public class SoundUtils {
-
-    public static File decodeByteArray(String filename, byte[] bytes, Activity activity) throws FileNotFoundException {
-        File tempAudioFile =
-                null;
-        try {
-            //list of cached temp file
-
-            //tempAudioFile = File.createTempFile(filename, "3gpp", activity.getCacheDir());
-            File recordDir = getRecordDirectory(activity);
-            tempAudioFile = new File(recordDir, filename);
-            FileOutputStream fos = new FileOutputStream(tempAudioFile);
-            fos.write(bytes);
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return tempAudioFile;
-    }
 
     @NonNull
     public static File getRecordDirectory(Activity activity) {

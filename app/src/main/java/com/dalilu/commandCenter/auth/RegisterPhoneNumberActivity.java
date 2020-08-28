@@ -1,19 +1,11 @@
 package com.dalilu.commandCenter.auth;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
-
 
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.clickhandler.ItemClickHandler;
@@ -22,11 +14,8 @@ import com.dalilu.commandCenter.utils.LanguageManager;
 
 
 public class RegisterPhoneNumberActivity extends AppCompatActivity {
-    private static final String TAG = "Register Phone";
     ActivityRegisterPhoneNumberBinding activityRegisterPhoneNumberBinding;
     ItemClickHandler itemClickHandler;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +57,7 @@ public class RegisterPhoneNumberActivity extends AppCompatActivity {
         activityRegisterPhoneNumberBinding.setValidateNumber(itemClickHandler);
 
 
+/*
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -75,8 +65,10 @@ public class RegisterPhoneNumberActivity extends AppCompatActivity {
                     1);
         }
 
+*/
 
     }
+/*
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -86,6 +78,7 @@ public class RegisterPhoneNumberActivity extends AppCompatActivity {
             } else finish();
         }
     }
+*/
 
    /* private void getPhoneNumber() {
 

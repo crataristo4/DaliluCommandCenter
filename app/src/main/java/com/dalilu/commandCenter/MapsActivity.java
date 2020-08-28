@@ -1,13 +1,10 @@
 package com.dalilu.commandCenter;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
-
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+
+import androidx.fragment.app.FragmentActivity;
 
 import com.dalilu.commandCenter.model.AlertItems;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
@@ -21,7 +18,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -30,7 +26,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final CollectionReference collectionReference = FirebaseFirestore
             .getInstance()
             .collection("Alerts");
-    ListenerRegistration registration;
     private GoogleMap mMap;
     private MarkerOptions marker;
     private static final String TAG = "MapsActivity";
@@ -79,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Query query = collectionReference.orderBy("timeStamp");
-        registration  = query.addSnapshotListener((queryDocumentSnapshots, e) -> {
+        query.addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;

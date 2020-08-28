@@ -4,29 +4,18 @@ package com.dalilu.commandCenter.utils;
 import com.dalilu.commandCenter.R;
 
 public final class AppConstants {
-    public static final String PREFS = "prefs";
-    public static final String IS_DIALOG_SHOWN = "dialogShown";
-    public static final String IS_PAGE_SWITCHED = "isPageSwitched";
-    public static final String IS_LOCATION_SHARED = "location sharing";
     public static final int VIDEO_TYPE = 0;
     public static final int IMAGE_TYPE = 1;
-    public static final int VIEW_TYPE_LOADING = 2;
     public static final int AUDIO_TYPE = 2;
     public static final int TEXT_TYPE = 1;
-    public static final int CAMERA_REQUEST_CODE = 1;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
-    public static final String SEND_REQUEST_TAG = "sendRequest";
     public static final String UID = "uid";
     public static final String PHONE_NUMBER = "phoneNumber";
-    public static final String RESPONSE = "response";
-    public static final String FIRST_NAME = "firstName";
-    public static final String LAST_NAME = "lastName";
     public static final String USER_NAME = "userName";
     public static final String STATE = "state";
     public static final String COUNTRY = "country";
     public static final String KNOWN_LOCATION = "known location";
-    public static final String TIMESTAMP = "timeStamp";
     public static final String USER_PHOTO_URL = "userPhotoUrl";
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     public static final String CACHE_UTILS = "CacheUtils";
@@ -55,12 +44,6 @@ public final class AppConstants {
     public final static String KEY_LOCATION = "location";
     public final static String KEY_LAST_UPDATED_TIME_STRING = "last-updated-time-string";
 
-
-    // key to store image path in savedInstance state
-    public static final String KEY_IMAGE_STORAGE_PATH = "image_path";
-
-    // Bitmap sampling size
-    public static final int BITMAP_SAMPLE_SIZE = 8;
 
     // Gallery directory name to store the images or videos
     public static final String GALLERY_DIRECTORY_NAME = String.valueOf(R.string.app_name);

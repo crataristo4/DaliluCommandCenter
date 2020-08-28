@@ -24,9 +24,6 @@ public class LocationAsyncTask extends AsyncTask<LocationManager, Void, Void>
     @SuppressLint("StaticFieldLeak")
     private final LocationService activity;
 
-    private boolean runAsyncTask = true;
-    private boolean fetchForUpdate = true;
-
 
     public LocationAsyncTask(LocationService activity) {
         this.activity = activity;
