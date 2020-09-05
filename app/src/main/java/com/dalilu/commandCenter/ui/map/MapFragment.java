@@ -120,7 +120,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                     marker = new MarkerOptions().position(latLng)
                             .title(userName + " " + dot + " " + GetTimeAgo.getTimeAgo(timeStampX))
-                            .snippet(phoneNumber);
+                            .snippet(address + " " + dot + " " + dateReported);
 
                     mMap.addMarker(marker);
 

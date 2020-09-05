@@ -76,7 +76,9 @@ public class HomeFragment extends Fragment {
     private void fetchData() {
 
         // Create a query against the collection.
-        Query query = collectionReference.orderBy("timeStamp", Query.Direction.DESCENDING).limit(INITIAL_LOAD);
+        Query query = collectionReference
+                .orderBy("timeStamp", Query.Direction.DESCENDING)
+                .limit(INITIAL_LOAD);
 
       /*  query.get().addOnSuccessListener(queryDocumentSnapshots -> {
             // arrayList.clear();
@@ -118,7 +120,7 @@ public class HomeFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });*/
 
-         arrayList.clear();
+        arrayList.clear();
         //get data from model
         //group data by images
         //group data by Videos
@@ -148,7 +150,7 @@ public class HomeFragment extends Fragment {
                 if (ds.getData().containsKey("image")) {
 
                     arrayList.add(new AlertItems(AppConstants.IMAGE_TYPE,
-                            userName, userPhotoUrl, url, timeStamp, address, id, dateReported,isSolved));
+                            userName, userPhotoUrl, url, timeStamp, address, id, dateReported, isSolved));
 
                 }
                 //group data by Videos
