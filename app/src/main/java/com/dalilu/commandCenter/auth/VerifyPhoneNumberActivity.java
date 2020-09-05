@@ -22,8 +22,6 @@ import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -47,9 +45,6 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         commandCenterRef = FirebaseFirestore.getInstance().collection("Command Center");
-        //storage reference
-        StorageReference mStorageReference = FirebaseStorage.getInstance().getReference("command center");
-        imageUrl = "https://firebasestorage.googleapis.com/v0/b/dalilu-app.appspot.com/o/command%20center%2Fcc.jpg?alt=media&token=cc2872f4-7423-4198-a8f6-7884ce7c0064";
 
 
         Intent intent = getIntent();
@@ -118,7 +113,6 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
                         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                             super.onCodeSent(s, forceResendingToken);
                             code = s;
-                            // edtCode.setText(code);
                         }
                     });
 
@@ -131,9 +125,12 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
     }
 
     void gotoFinishAccount(String id) {
+        imageUrl = "https://firebasestorage.googleapis.com/v0/b/dalilu-app.appspot.com/o/command%20center%2Fcc.jpg?alt=media&token=cc2872f4-7423-4198-a8f6-7884ce7c0064";
+        String userName = "Command Center";
+
         Map<String, Object> accountInfo = new HashMap<>();
         accountInfo.put("userPhotoUrl", imageUrl);
-        accountInfo.put("userName", "Command Center");
+        accountInfo.put("userName", userName);
         accountInfo.put("phoneNumber", phoneNumber);
         accountInfo.put("userId", id);
 
@@ -142,6 +139,8 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
         Intent intent1 = new Intent(VerifyPhoneNumberActivity.this, MainActivity.class);
         intent1.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
         intent1.putExtra(AppConstants.UID, id);
+        intent1.putExtra(AppConstants.USER_NAME, userName);
+        intent1.putExtra(AppConstants.USER_PHOTO_URL, imageUrl);
         startActivity(intent1);
         this.finishAffinity();
     }
@@ -156,9 +155,6 @@ public class VerifyPhoneNumberActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        /*this.finishAffinity();
-        startActivity(new Intent(this, RegisterPhoneNumberActivity.class)
-                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
-*/
+
     }
 }

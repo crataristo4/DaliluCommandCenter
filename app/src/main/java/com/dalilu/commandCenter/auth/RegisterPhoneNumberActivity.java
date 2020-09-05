@@ -57,44 +57,6 @@ public class RegisterPhoneNumberActivity extends AppCompatActivity {
         activityRegisterPhoneNumberBinding.setValidateNumber(itemClickHandler);
 
 
-/*
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_CONTACTS},
-                    1);
-        }
-
-*/
-
     }
-/*
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == 1) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.i(TAG, "onRequestPermissionsResult: " + " granted");
-            } else finish();
-        }
-    }
-*/
-
-   /* private void getPhoneNumber() {
-
-        String getPhoneNumber = Objects.requireNonNull(txtNumber.getEditText()).getText().toString();
-        if (!getPhoneNumber.trim().isEmpty()) {
-            getPhone = countryCodePicker.getFormattedFullNumber();
-            Intent verifyNumberIntent = new Intent(RegisterPhoneNumberActivity.this, VerifyPhoneNumberActivity.class);
-            verifyNumberIntent.putExtra(AppConstants.PHONE_NUMBER, getPhone);
-            verifyNumberIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(verifyNumberIntent);
-
-        } else if (getPhoneNumber.trim().isEmpty()) {
-            txtNumber.setErrorEnabled(true);
-            txtNumber.setError(getString(R.string.phoneReq));
-        } else {
-            txtNumber.setErrorEnabled(false);
-        }
-    }*/
 }

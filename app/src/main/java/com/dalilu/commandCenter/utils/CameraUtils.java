@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -42,6 +44,31 @@ public class CameraUtils {
     }
 
     /**
+     * Downsizing the bitmap to avoid OutOfMemory exceptions
+     */
+    public static Bitmap optimizeBitmap(int sampleSize, String filePath) {
+        // bitmap factory
+        BitmapFactory.Options options = new BitmapFactory.Options();
+
+        // downsizing image as it throws OutOfMemory Exception for larger
+        // images
+        options.inSampleSize = sampleSize;
+
+        return BitmapFactory.decodeFile(filePath, options);
+    }
+
+    /**
+     * Checks whether device has camera or not. This method not necessary if
+     * android:required="true" is used in manifest file
+     */
+    public static boolean isDeviceSupportCamera(Context context) {
+        // this device has a camera
+        // no camera on this device
+        return context.getPackageManager().hasSystemFeature(
+                PackageManager.FEATURE_CAMERA);
+    }
+
+    /**
      * Open device app settings to allow user to enable permissions
      */
     public static void openSettings(Context context) {
@@ -60,7 +87,6 @@ public class CameraUtils {
      * Creates and returns the image or video file before opening the camera
      */
     public static File getOutputMediaFile(int type) {
-
         // External sdcard location
         File mediaStorageDir = new File(
                 Environment
@@ -92,6 +118,10 @@ public class CameraUtils {
         }
 
         return mediaFile;
+
+
     }
+
+
 
 }

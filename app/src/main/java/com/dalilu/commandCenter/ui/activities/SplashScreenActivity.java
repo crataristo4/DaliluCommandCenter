@@ -3,7 +3,6 @@ package com.dalilu.commandCenter.ui.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 
@@ -37,33 +36,22 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         FirebaseApp.initializeApp(this);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        //overridePendingTransition(R.anim.fadein, R.anim.explode);
+        overridePendingTransition(R.anim.fadein, R.anim.explode);
         super.onCreate(savedInstanceState);
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
-
         ActivitySplashScreenBinding activitySplashScreenBinding = DataBindingUtil.setContentView(this, R.layout.activity_splash_screen);
-        activitySplashScreenBinding.txtAppName.post(() -> {
-            activitySplashScreenBinding.txtAppName.startAnimation(AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.fadein));
-
-            activitySplashScreenBinding.txtAppName.startAnimation(AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.from_top));
-
-        });
-
-
-
+        activitySplashScreenBinding.txtAppName.startAnimation(AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.from_top));
+        activitySplashScreenBinding.txtCmd.startAnimation(AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.slideinleft));
+        activitySplashScreenBinding.txtCenter.startAnimation(AnimationUtils.loadAnimation(SplashScreenActivity.this, R.anim.from_bottom));
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-     //   runOnUiThread(this::startSplash);
-
-
         startSplash();
     }
 
@@ -78,9 +66,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 uid = firebaseUser.getUid();
                 phoneNumber = firebaseUser.getPhoneNumber();
 
-                Log.i("Id: ", uid);
-
-                // usersDbRef = FirebaseDatabase.getInstance().getReference().child("Users");
                 usersCollectionRef = FirebaseFirestore.getInstance().collection("Command Center");
 
                 usersCollectionRef.get().addOnCompleteListener(task -> {
@@ -107,23 +92,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
                                     }
 
-                                 /*   else {
-
-                                        intent = new Intent(SplashScreenActivity.this, FinishAccountSetupActivity.class);
-                                        intent.putExtra(AppConstants.UID, uid);
-                                        intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-
-                                    }*/
-
                                     startActivity(intent);
                                     SplashScreenActivity.this.finishAffinity();
 
                                 } else {
 
                                     DisplayViewUI.displayToast(SplashScreenActivity.this, Objects.requireNonNull(task1.getException()).getMessage());
-
 
                                 }
 
@@ -142,6 +116,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                 finish();
             }
 
-        }, 2000);
+        }, 3000);
     }
 }

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
-
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.auth.VerifyPhoneNumberActivity;
 import com.dalilu.commandCenter.utils.AppConstants;
@@ -69,39 +68,8 @@ public class ItemClickHandler {
 
     private void validateInputs(final View view) {
 
-/*
-        languageSelectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
-                if (position == 0) {
-
-                    btnNext.setEnabled(false);
-
-                } else if (position == 1) {//english is selected
-                    btnNext.setEnabled(true);
-                    LanguageManager.setNewLocale(context, LanguageManager.LANGUAGE_KEY_ENGLISH);
-                    // TODO: 7/31/2020  fix app language
-                    // recreate();
-
-                } else if (position == 2) {//french is selected
-                    btnNext.setEnabled(true);
-                    LanguageManager.setNewLocale(context, LanguageManager.LANGUAGE_KEY_FRENCH);
-                    // recreate();
-
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-*/
-
-
         countryCodePicker.registerCarrierNumberEditText(txtPhoneNumber.getEditText());
         countryCodePicker.setNumberAutoFormattingEnabled(true);
-
 
         String phoneNumber = Objects.requireNonNull(txtPhoneNumber.getEditText()).getText().toString();
 

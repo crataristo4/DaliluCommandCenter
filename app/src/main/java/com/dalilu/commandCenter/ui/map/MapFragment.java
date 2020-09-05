@@ -41,6 +41,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             new LatLng(24.9745740829, 4.27020999514));
 
     FragmentMapBinding fragmentMapBinding;
+    SupportMapFragment mapFragment;
 
     public MapFragment() {
     }
@@ -62,8 +63,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (savedInstanceState != null) {
+            mapFragment = (SupportMapFragment) requireActivity().getSupportFragmentManager().getFragment(savedInstanceState, "fragment");
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
+        }
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.setRetainInstance(true);
             mapFragment.getMapAsync(this);
@@ -117,12 +122,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 mMap.addMarker(marker);
 
 
-            }
+             }
 
 
-
-        });
+         });
 
     }
+
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        getChildFragmentManager().putFragment(outState, "mapFragment", mapFragment);
+    }
+
 
 }

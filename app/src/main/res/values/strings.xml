@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Dalilu Command \n Center</string>
+    <string name="app_name">Dalilu Command \nCenter</string>
     <string name="title_home">Home</string>
     <string name="recordAudio">Record audio</string>
     <string name="oops">Oops! Failed create </string>
@@ -54,6 +54,9 @@
     <string name="daysAgo"> days ago</string>
     <string name="uploadingImage">uploading image please wait…</string>
     <string name="uploadingVideo">uploading video please wait…</string>
+    <string name="da">Dalilu</string>
+    <string name="cm">Command</string>
+    <string name="cn">Center</string>
     <string name="stdVoiceRecordind">Started voice recording</string>
     <string name="rcAud">Recording audio , press stop to upload</string>
     <string name="dalilu_will_send_an_sms_message_to_verify_your_phone_number">Dalilu will send an SMS message to verify your phone number :</string>
@@ -63,6 +66,5 @@
     <string name="enter_6_digit_code">Enter 6-digit code</string>
     <string name="wrong_number">Wrong number?</string>
     <string name="invalidPhone">Invalid phone number</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="list">List Mode</string>
 </resources>

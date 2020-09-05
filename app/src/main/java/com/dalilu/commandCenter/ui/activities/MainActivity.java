@@ -38,8 +38,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -109,9 +107,7 @@ public class MainActivity extends BaseActivity {
         // Update values using data stored in the Bundle.
         updateValuesFromBundle(savedInstanceState);
 
-        DatabaseReference locationDbRef = FirebaseDatabase.getInstance().getReference().child("Locations");
         alertsCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
-        CollectionReference locationCollectionDbRef = FirebaseFirestore.getInstance().collection("Locations");
 
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
@@ -148,24 +144,6 @@ public class MainActivity extends BaseActivity {
 
 
         BadgeDrawable badgeDrawableHome = navView.getOrCreateBadge(menuItemHome.getItemId());
-
-      /*  activityMainBinding.logOut.setOnClickListener(view -> DisplayViewUI.displayAlertDialog(view.getContext(),
-                getString(R.string.logOut), getString(R.string.xcvv),
-                getString(R.string.logMeOut), getString(R.string.cancel),
-                (dialogInterface, i) -> {
-                    if (i == -1) {
-
-                        FirebaseAuth.getInstance().signOut();
-                        startActivity(new Intent(view.getContext(), SplashScreenActivity.class)
-                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP));
-                        finish();
-                    } else if (i == -2) {
-                        dialogInterface.dismiss();
-                    }
-
-
-                }));
-*/
 
         Intent getUserDetailsIntent = getIntent();
         if (getUserDetailsIntent != null) {

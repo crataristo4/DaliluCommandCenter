@@ -39,6 +39,7 @@ public class HomeFragment extends Fragment {
     private final ArrayList<AlertItems> arrayList = new ArrayList<>();
     private LinearLayoutManager layoutManager;
     private Parcelable mState;
+    ListenerRegistration registration;
     private final CollectionReference collectionReference = FirebaseFirestore
             .getInstance()
             .collection("Alerts");
@@ -121,7 +122,7 @@ public class HomeFragment extends Fragment {
         //get data from model
         //group data by images
         //group data by Videos
-        ListenerRegistration registration = query.addSnapshotListener((queryDocumentSnapshots, e) -> {
+        registration = query.addSnapshotListener((queryDocumentSnapshots, e) -> {
             if (e != null) {
                 Log.w(TAG, "Listen failed.", e);
                 return;
@@ -145,15 +146,12 @@ public class HomeFragment extends Fragment {
 //group data by images
                 if (ds.getData().containsKey("image")) {
 
-
                     arrayList.add(new AlertItems(AppConstants.IMAGE_TYPE,
                             userName, userPhotoUrl, url, timeStamp, address, id, dateReported,isSolved));
 
                 }
                 //group data by Videos
                 else if (ds.getData().containsKey("video")) {
-
-
                     arrayList.add(new AlertItems(AppConstants.VIDEO_TYPE,
                             userName,
                             url,
@@ -176,7 +174,7 @@ public class HomeFragment extends Fragment {
     public void onStop() {
         super.onStop();
         //activityItemAdapter.stopListening();
-        //registration.remove();
+        registration.remove();
     }
 
     @Override

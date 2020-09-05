@@ -1,8 +1,6 @@
 package com.dalilu.commandCenter.utils;
 
 
-import com.dalilu.commandCenter.R;
-
 public final class AppConstants {
     public static final int VIDEO_TYPE = 0;
     public static final int IMAGE_TYPE = 1;
@@ -46,7 +44,7 @@ public final class AppConstants {
 
 
     // Gallery directory name to store the images or videos
-    public static final String GALLERY_DIRECTORY_NAME = String.valueOf(R.string.app_name);
+    public static final String GALLERY_DIRECTORY_NAME = "Dalilu";
 
     // Image and Video file extensions
     public static final String IMAGE_EXTENSION = "jpg";

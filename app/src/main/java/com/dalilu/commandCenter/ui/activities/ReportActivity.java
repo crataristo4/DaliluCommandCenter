@@ -5,16 +5,19 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,8 +30,6 @@ import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.CameraUtils;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -63,6 +64,10 @@ public class ReportActivity extends AppCompatActivity {
     private ImageView imgPhoto;
     private VideoView videoView;
     private Button btnUpload;
+    // key to store image path in savedInstance state
+    public static final String KEY_IMAGE_STORAGE_PATH = "image_path";
+    // Bitmap sampling size
+    public static final int BITMAP_SAMPLE_SIZE = 8;
 
 
     @Override
@@ -74,7 +79,6 @@ public class ReportActivity extends AppCompatActivity {
 
         StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("alerts");
         filePath = imageStorageRef.child(UUID.randomUUID().toString());
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference().child("alerts");
         alertCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
         imgPhoto = activityReportBinding.imgAlertPhoto;
         videoView = activityReportBinding.videoView;
@@ -94,6 +98,15 @@ public class ReportActivity extends AppCompatActivity {
 
         }
 
+        // Checking availability of the camera
+        if (!CameraUtils.isDeviceSupportCamera(getApplicationContext())) {
+            Toast.makeText(getApplicationContext(),
+                    "Sorry! Your device doesn't support camera",
+                    Toast.LENGTH_LONG).show();
+            // will close the app if the device doesn't have camera
+            finish();
+        }
+
         activityReportBinding.fabCamera.setOnClickListener(v -> {
             if (CameraUtils.checkPermissions(v.getContext())) {
                 captureImage();
@@ -110,6 +123,11 @@ public class ReportActivity extends AppCompatActivity {
                 requestCameraPermission(AppConstants.MEDIA_TYPE_VIDEO);
             }
         });
+
+
+        // restoring storage image path from saved instance state
+        // otherwise the path will be null on device rotation
+        restoreFromBundle(savedInstanceState);
 
 
     }
@@ -291,6 +309,7 @@ public class ReportActivity extends AppCompatActivity {
 
                 // Refreshing the gallery
                 CameraUtils.refreshGallery(ReportActivity.this, imageStoragePath);
+                previewCapturedImage();
                 //CameraUtils.optimizeBitmap(10,imageStoragePath);
                 uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
                 imgPhoto.setVisibility(View.VISIBLE);
@@ -324,6 +343,7 @@ public class ReportActivity extends AppCompatActivity {
                 CameraUtils.refreshGallery(ReportActivity.this, imageStoragePath);
 
                 uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
+                previewVideo();
 
                 videoView.setVisibility(View.VISIBLE);
                 imgPhoto.setVisibility(View.GONE);
@@ -358,4 +378,80 @@ public class ReportActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
     }
+
+    /**
+     * Display image from gallery
+     */
+    private void previewCapturedImage() {
+        try {
+            // hide video preview
+            imgPhoto.setVisibility(View.VISIBLE);
+            videoView.setVisibility(View.GONE);
+
+            Bitmap bitmap = CameraUtils.optimizeBitmap(BITMAP_SAMPLE_SIZE, imageStoragePath);
+
+            imgPhoto.setImageBitmap(bitmap);
+
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Displaying video in VideoView
+     */
+    private void previewVideo() {
+        try {
+            videoView.setVisibility(View.VISIBLE);
+            imgPhoto.setVisibility(View.GONE);
+            videoView.setVideoPath(imageStoragePath);
+            videoView.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Restoring store image path from saved instance state
+     */
+    private void restoreFromBundle(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(KEY_IMAGE_STORAGE_PATH)) {
+                imageStoragePath = savedInstanceState.getString(KEY_IMAGE_STORAGE_PATH);
+                if (!TextUtils.isEmpty(imageStoragePath)) {
+                    if (imageStoragePath.substring(imageStoragePath.lastIndexOf(".")).equals("." + AppConstants.IMAGE_EXTENSION)) {
+                        previewCapturedImage();
+                    } else if (imageStoragePath.substring(imageStoragePath.lastIndexOf(".")).equals("." + AppConstants.VIDEO_EXTENSION)) {
+                        previewVideo();
+                    }
+                }
+            }
+        }
+    }
+
+
+    /**
+     * Saving stored image path to saved instance state
+     */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        // save file url in bundle as it will be null on screen orientation
+        // changes
+        outState.putString(KEY_IMAGE_STORAGE_PATH, imageStoragePath);
+    }
+
+    /**
+     * Restoring image path from saved instance state
+     */
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        // get the file url
+        imageStoragePath = savedInstanceState.getString(KEY_IMAGE_STORAGE_PATH);
+    }
+
 }
