@@ -121,13 +121,13 @@ public class MainActivity extends BaseActivity {
 
         initViews();
 
+
     }
 
     private void initViews() {
         BottomNavigationView navView = activityMainBinding.navView;
         Menu menu = navView.getMenu();
         MenuItem menuItemHome = menu.findItem(R.id.navigation_home);
-
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.navigation_home, R.id.navigation_maps)
@@ -137,13 +137,21 @@ public class MainActivity extends BaseActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
-
         navView.setOnNavigationItemReselectedListener(item -> {
 
         });
 
 
         BadgeDrawable badgeDrawableHome = navView.getOrCreateBadge(menuItemHome.getItemId());
+        runOnUiThread(() -> alertsCollectionReference
+                .whereEqualTo("isSolved", false)
+                .get().addOnCompleteListener(task -> {
+
+                    if (task.getResult().size() > 0)
+                        badgeDrawableHome.setNumber(task.getResult().size());
+
+                }));
+
 
         Intent getUserDetailsIntent = getIntent();
         if (getUserDetailsIntent != null) {
@@ -152,18 +160,7 @@ public class MainActivity extends BaseActivity {
             userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
             phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
 
-
-
         }
-
-
-        alertsCollectionReference.get().addOnCompleteListener(task -> {
-
-            if (task.getResult().size() > 0)
-                badgeDrawableHome.setNumber(task.getResult().size());
-
-        });
-
 
     }
 

@@ -22,15 +22,12 @@
     <string name="noInternet">Internet connection is needed to continue</string>
     <string name="phoneReq">phone number is required</string>
 
-    <string name="welcome">Welcome to Dalilu App</string>
-    <string name="welcomeNote">"         <![CDATA[          Thank you creating an account with <b>Dalilu. </b>         Help us fight crime by reporting suspicious activities<br> <br>          <b>Please <b>TAKE NOTE</b> of the following</b>          <ol>         <li><b>When you feel unsafe send your location to at least three of your contacts list</b></li>         <li><b>Always capture a crime , accident and upload it</b></li>         <li><b>To enable a fast crime scene investigation please follow up on comments</b> </li>         <li><b>Report any suspicious / fraudulent account </b></li>         <li><b>Do not be rude, act professional<b></li>         </ol>         <br>         ]]>     "</string>
     <!--location-->
 
     <string name="permission_rationale">Location permissions are required to locate activities on map
     </string>
 
     <string name="successFull">Successful</string>
-    <string name="continueSetUp">Continue</string>
     <string name="grantPerm">Grant permission</string>
     <string name="ok">OK</string>
     <string name="errMsg">Location settings are inadequate, and cannot be </string>
@@ -66,5 +63,5 @@
     <string name="enter_6_digit_code">Enter 6-digit code</string>
     <string name="wrong_number">Wrong number?</string>
     <string name="invalidPhone">Invalid phone number</string>
-    <string name="list">List Mode</string>
+    <string name="alerts">Alerts</string>
 </resources>

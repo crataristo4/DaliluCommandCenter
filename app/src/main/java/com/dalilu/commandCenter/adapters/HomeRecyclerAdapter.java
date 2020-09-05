@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
@@ -209,8 +210,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return dataSet == null ? 0 : dataSet.size();
     }
 
-
-
     //view holder for videos
     static class VideoTypeViewHolder extends RecyclerView.ViewHolder {
         final VideoTypeBinding videoTypeBinding;
@@ -234,6 +233,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     static class ImageTypeViewHolder extends RecyclerView.ViewHolder {
         final ImageTypeBinding imageTypeBinding;
         final TextView txtComments;
+        final ImageView imgAlertPhoto, imgChecked;
         final RippleBackground rippleBackground;
         final MediaPlayer mediaPlayer;
 
@@ -243,7 +243,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.imageTypeBinding = imageTypeBinding;
             txtComments = imageTypeBinding.txtComments;
             rippleBackground = imageTypeBinding.rippleContent;
-          //  rippleBackground.startRippleAnimation();
+            imgAlertPhoto = imageTypeBinding.imgContentPhoto;
+            imgChecked = imageTypeBinding.imgChecked;
             mediaPlayer = MediaPlayer.create(imageTypeBinding.getRoot().getContext(), R.raw.alarm);
 
 
@@ -269,13 +270,16 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         private void isCrimeSolved(boolean isSolved){
 
-            if (!isSolved){
+            if (!isSolved) {
 
                 rippleBackground.setVisibility(View.VISIBLE);
+                imgChecked.setVisibility(View.GONE);
                 rippleBackground.startRippleAnimation();
-                if (!mediaPlayer.isPlaying()){
+                imgAlertPhoto.setVisibility(View.GONE);
+
+                if (!mediaPlayer.isPlaying()) {
                     try {
-                     //   mediaPlayer.reset();
+                        //   mediaPlayer.reset();
                         mediaPlayer.start();
                         mediaPlayer.setLooping(true);
                     } catch (Exception e) {
@@ -284,57 +288,28 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                 }
 
-
-
-
-
             }else {
 
                 rippleBackground.setVisibility(View.GONE);
+                imgChecked.setVisibility(View.VISIBLE);
                 rippleBackground.stopRippleAnimation();
+                imgAlertPhoto.setVisibility(View.VISIBLE);
+
                 try {
-                    if (mediaPlayer.isPlaying()){
+                    if (mediaPlayer.isPlaying()) {
                         mediaPlayer.reset();
                         mediaPlayer.stop();
-
                         mediaPlayer.setLooping(false);
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
 
                     e.printStackTrace();
                 }
-
-
-
-
-                // mediaPlayer = null;
-                //      mediaPlayer.release();
-
 
             }
 
 
         }
-
-
-      /*  private void numOfComments(TextView txtComments, String postId) {
-            DatabaseReference likesDbRef = FirebaseDatabase.getInstance()
-                    .getReference().child("Comments").child(postId);
-
-            likesDbRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                    txtComments.setText(MessageFormat.format("{0} Comments", dataSnapshot.getChildrenCount()));
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-
-        }*/
 
 
     }

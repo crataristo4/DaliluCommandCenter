@@ -118,7 +118,7 @@ public class HomeFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });*/
 
-        // arrayList.clear();
+         arrayList.clear();
         //get data from model
         //group data by images
         //group data by Videos
@@ -130,6 +130,7 @@ public class HomeFragment extends Fragment {
             // arrayList.clear();
             assert queryDocumentSnapshots != null;
             for (QueryDocumentSnapshot ds : queryDocumentSnapshots) {
+
 
                 AlertItems alertItems = ds.toObject(AlertItems.class);
                 //get data from model
@@ -152,6 +153,7 @@ public class HomeFragment extends Fragment {
                 }
                 //group data by Videos
                 else if (ds.getData().containsKey("video")) {
+
                     arrayList.add(new AlertItems(AppConstants.VIDEO_TYPE,
                             userName,
                             url,

@@ -1,5 +1,6 @@
 package com.dalilu.commandCenter.ui.map;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
@@ -63,19 +65,18 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (savedInstanceState != null) {
-            mapFragment = (SupportMapFragment) requireActivity().getSupportFragmentManager().getFragment(savedInstanceState, "fragment");
-
-        }
 
         mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         if (mapFragment != null) {
-            mapFragment.setRetainInstance(true);
             mapFragment.getMapAsync(this);
+            mapFragment.setRetainInstance(true);
+
         }
+
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -86,54 +87,68 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         mMap.getUiSettings().setRotateGesturesEnabled(true);
         mMap.setOnMapLoadedCallback(() -> mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(MALI, 0)));
 
-        Query query = collectionReference.orderBy("timeStamp");
-         query.addSnapshotListener((queryDocumentSnapshots, e) -> {
-             if (e != null) {
-                 Log.w(TAG, "Listen failed.", e);
-                 return;
-             }
-             // arrayList.clear();
-             assert queryDocumentSnapshots != null;
-             for (QueryDocumentSnapshot ds : queryDocumentSnapshots) {
-
-                 AlertItems alertItems = ds.toObject(AlertItems.class);
-                 //get data from model
-                GeoPoint geoPoint = alertItems.getCoordinates();
-                String address = alertItems.getAddress();
-                String userName = alertItems.getUserName();
-                String phoneNumber = alertItems.getPhoneNumber();
-                long timeStampX = alertItems.getTimeStamp();
-                String userPhotoUrl = alertItems.getUserPhotoUrl();
-                String url = alertItems.getUrl();
-                boolean isSolved = alertItems.isSolved();
-
-                String id = ds.getId();
-                String dateReported = alertItems.getDateReported();
-                Log.i(TAG, "Lat: " + geoPoint.getLatitude() + " Lng: " + geoPoint.getLongitude());
-
-                LatLng latLng = new LatLng(geoPoint.getLatitude(),geoPoint.getLongitude());
-
-                String dot = String.valueOf(Html.fromHtml("&#9673;"));
-
-                marker = new MarkerOptions().position(latLng)
-                        .title(userName + " " + dot +  " " + GetTimeAgo.getTimeAgo(timeStampX))
-                        .snippet(dateReported);
-
-                mMap.addMarker(marker);
+        try {
 
 
-             }
+            Query query = collectionReference.orderBy("timeStamp");
+            query.addSnapshotListener((queryDocumentSnapshots, e) -> {
+                if (e != null) {
+                    Log.w(TAG, "Listen failed.", e);
+                    return;
+                }
+                // arrayList.clear();
+                assert queryDocumentSnapshots != null;
+                for (QueryDocumentSnapshot ds : queryDocumentSnapshots) {
+
+                    AlertItems alertItems = ds.toObject(AlertItems.class);
+                    //get data from model
+                    GeoPoint geoPoint = alertItems.getCoordinates();
+                    String address = alertItems.getAddress();
+                    String userName = alertItems.getUserName();
+                    String phoneNumber = alertItems.getPhoneNumber();
+                    long timeStampX = alertItems.getTimeStamp();
+                    String userPhotoUrl = alertItems.getUserPhotoUrl();
+                    String url = alertItems.getUrl();
+
+                    boolean isSolved = alertItems.isSolved();
+
+                    String id = ds.getId();
+                    String dateReported = alertItems.getDateReported();
+                    LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
+
+                    String dot = String.valueOf(Html.fromHtml("&#9673;"));
+
+                    marker = new MarkerOptions().position(latLng)
+                            .title(userName + " " + dot + " " + GetTimeAgo.getTimeAgo(timeStampX))
+                            .snippet(phoneNumber);
+
+                    mMap.addMarker(marker);
+
+             /*   mMap.setOnMarkerClickListener(marker -> {
+
+                    if (marker != null) {
+
+                        String id1 = marker.getSnippet();
+                        DisplayViewUI.displayToast(requireActivity(), id1);
+
+                    }
 
 
-         });
+                    return false;
+                });*/
 
-    }
+
+                }
 
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        getChildFragmentManager().putFragment(outState, "mapFragment", mapFragment);
+            });
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+
     }
 
 

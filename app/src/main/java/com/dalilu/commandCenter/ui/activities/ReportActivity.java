@@ -374,11 +374,6 @@ public class ReportActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
     /**
      * Display image from gallery
      */

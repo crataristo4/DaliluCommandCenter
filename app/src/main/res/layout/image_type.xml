@@ -66,7 +66,7 @@
                 android:text="@{imageType.address}"
                 android:textStyle="bold"
                 card_view:layout_constraintBottom_toBottomOf="@+id/imgUserPhoto"
-                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintEnd_toStartOf="@+id/imgChecked"
                 card_view:layout_constraintStart_toStartOf="@+id/txtUserName"
                 card_view:layout_constraintTop_toBottomOf="@+id/txtUserName"
                 card_view:layout_constraintVertical_bias="0.0" />
@@ -148,6 +148,16 @@
                 card_view:layout_constraintTop_toBottomOf="@+id/card"
                 card_view:layout_constraintVertical_bias="0.52"
                 card_view:drawableStartCompat="@drawable/ic_messagewhite" />
+
+            <ImageView
+                android:id="@+id/imgChecked"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/ic_baseline_check_circle_24"
+                card_view:layout_constraintEnd_toEndOf="parent"
+                card_view:layout_constraintTop_toBottomOf="@+id/txtTime" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
