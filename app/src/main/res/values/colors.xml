@@ -11,5 +11,7 @@
     <color name="amber">#FFA000</color>
     <color name="amberLight">#F0FFA000</color>
     <color name="acceptGreen">#388e3c</color>
+    <color name="fb">#3b5999</color>
+
 
 </resources>

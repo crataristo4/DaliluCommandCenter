@@ -30,10 +30,11 @@ import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.dalilu.commandCenter.Dalilu;
 import com.dalilu.commandCenter.R;
-import com.dalilu.commandCenter.databinding.ImageTypeBinding;
+import com.dalilu.commandCenter.databinding.ImageTypeGridBinding;
 import com.dalilu.commandCenter.databinding.VideoTypeBinding;
 import com.dalilu.commandCenter.model.AlertItems;
 import com.dalilu.commandCenter.ui.activities.CommentsActivity;
+import com.dalilu.commandCenter.ui.activities.ImageViewActivity;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
@@ -65,7 +66,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             case AppConstants.IMAGE_TYPE:
 
-                return new ImageTypeViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.image_type, parent, false));
+                return new ImageTypeViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.image_type_grid, parent, false));
 
 
         }
@@ -165,6 +166,21 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     ((ImageTypeViewHolder) holder).numOfComments(((ImageTypeViewHolder) holder).txtComments, object.getId());
 
+                    ((ImageTypeViewHolder) holder).imgAlertPhoto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent img = new Intent(view.getContext(), ImageViewActivity.class);
+                            img.putExtra(AppConstants.UID, object.getId());
+                            img.putExtra(AppConstants.OBJECT_URL, object.getUrl());
+                            img.putExtra(AppConstants.KNOWN_LOCATION, object.address);
+                            img.putExtra(AppConstants.DATE_TIME, object.getDateReported());
+                            img.putExtra(AppConstants.USER_NAME, object.getUserName());
+
+                            view.getContext().startActivity(img);
+
+                        }
+                    });
+
                     ((ImageTypeViewHolder) holder).txtComments.setOnClickListener(view -> {
 
                         Intent commentsIntent = new Intent(view.getContext(), CommentsActivity.class);
@@ -231,14 +247,14 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     //view holder for images
     static class ImageTypeViewHolder extends RecyclerView.ViewHolder {
-        final ImageTypeBinding imageTypeBinding;
+        final ImageTypeGridBinding imageTypeBinding;
         final TextView txtComments;
         final ImageView imgAlertPhoto, imgChecked;
         final RippleBackground rippleBackground;
         final MediaPlayer mediaPlayer;
 
 
-        ImageTypeViewHolder(@NonNull ImageTypeBinding imageTypeBinding) {
+        ImageTypeViewHolder(@NonNull ImageTypeGridBinding imageTypeBinding) {
             super(imageTypeBinding.getRoot());
             this.imageTypeBinding = imageTypeBinding;
             txtComments = imageTypeBinding.txtComments;

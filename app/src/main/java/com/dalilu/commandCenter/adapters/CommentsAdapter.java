@@ -144,7 +144,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         CommentsViewHolder(@NonNull LayoutCommentBinding layoutCommentBinding) {
             super(layoutCommentBinding.getRoot());
             this.layoutCommentBinding = layoutCommentBinding;
-            txtDateTime = layoutCommentBinding.txtDateTime;
+            txtDateTime = layoutCommentBinding.txtDataTime;
 
         }
 

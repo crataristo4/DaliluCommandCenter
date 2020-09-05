@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dalilu.commandCenter.R;
@@ -37,7 +37,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private HomeRecyclerAdapter adapter;
     private final ArrayList<AlertItems> arrayList = new ArrayList<>();
-    private LinearLayoutManager layoutManager;
+    //  private LinearLayoutManager layoutManager;
+    private GridLayoutManager layoutManager;
     private Parcelable mState;
     ListenerRegistration registration;
     private final CollectionReference collectionReference = FirebaseFirestore
@@ -64,8 +65,12 @@ public class HomeFragment extends Fragment {
     private void initViews() {
 
         recyclerView = fragmentHomeBinding.recyclerViewHome;
-        layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setHasFixedSize(true);
+
+        /*layoutManager = new LinearLayoutManager(getActivity());*/
+
+        layoutManager = new GridLayoutManager(getActivity(), 2);
+
         recyclerView.setLayoutManager(layoutManager);
         adapter = new HomeRecyclerAdapter(arrayList, getContext());
         recyclerView.setAdapter(adapter);
@@ -155,14 +160,14 @@ public class HomeFragment extends Fragment {
                 }
                 //group data by Videos
                 else if (ds.getData().containsKey("video")) {
-
+/*
                     arrayList.add(new AlertItems(AppConstants.VIDEO_TYPE,
                             userName,
                             url,
                             userPhotoUrl,
                             timeStamp,
                             address
-                    ));
+                    ));*/
                 }
 
             }

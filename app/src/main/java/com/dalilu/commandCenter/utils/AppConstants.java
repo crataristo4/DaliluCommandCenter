@@ -11,10 +11,13 @@ public final class AppConstants {
     public static final String UID = "uid";
     public static final String PHONE_NUMBER = "phoneNumber";
     public static final String USER_NAME = "userName";
+    public static final String DATE_TIME = "dateTime";
+    public static final String TIME_STAMP = "timeStamp";
     public static final String STATE = "state";
     public static final String COUNTRY = "country";
     public static final String KNOWN_LOCATION = "known location";
     public static final String USER_PHOTO_URL = "userPhotoUrl";
+    public static final String OBJECT_URL = "URL";
     public static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     public static final String LATITUDE = "lat";
     public static final String LONGITUDE = "lng";
