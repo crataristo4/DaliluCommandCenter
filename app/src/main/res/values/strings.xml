@@ -19,7 +19,6 @@
     <string name="next">Next</string>
     <string name="phoneNumber">Phone Number</string>
     <string name="verify">Verify</string>
-    <string name="noInternet">Internet connection is needed to continue</string>
     <string name="phoneReq">phone number is required</string>
 
     <!--location-->
@@ -65,4 +64,9 @@
     <string name="invalidPhone">Invalid phone number</string>
     <string name="alerts">Alerts</string>
     <string name="chkkdd">Checked by Police</string>
+    <string name="selectLanguage">Choisissez la langue s\'il vous plait</string>
+    <string name="plsWait">Verification en cours. Attendez s\'il vous plait</string>
+    <string name="noInternet">Aucune connexion internet n\'est necessaire. Contactez votre fournisseur de service si le probleme persiste</string>
+    <string name="codeShort">Code trop court.</string>
+
 </resources>
