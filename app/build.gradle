@@ -20,7 +20,7 @@ android {
     }
 
     compileOptions {
-       coreLibraryDesugaringEnabled true
+     //  coreLibraryDesugaringEnabled true
         targetCompatibility = 1.8
         sourceCompatibility = 1.8
     }
@@ -34,17 +34,17 @@ android {
         }
     }
 
-    buildTypes {
+   /* buildTypes {
         release {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
-    }
+    }*/
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
+   // coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.10'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
