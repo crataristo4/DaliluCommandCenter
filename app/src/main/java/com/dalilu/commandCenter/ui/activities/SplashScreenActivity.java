@@ -26,7 +26,6 @@ import java.util.Objects;
 
 
 public class SplashScreenActivity extends AppCompatActivity {
-    Intent intent;
     private CollectionReference usersCollectionRef;
     private String uid, phoneNumber, userName, userPhotoUrl;
     FirebaseAuth firebaseAuth;
@@ -58,6 +57,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
     void startSplash() {
 
+        Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 
         new Handler().postDelayed(() -> {
 
@@ -84,7 +84,6 @@ public class SplashScreenActivity extends AppCompatActivity {
                                         userName = Objects.requireNonNull(document.getString("userName"));
                                         phoneNumber = Objects.requireNonNull(document.getString("phoneNumber"));
 
-                                        intent = new Intent(SplashScreenActivity.this, MainActivity.class);
                                         intent.putExtra(AppConstants.UID, uid);
                                         intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
                                         intent.putExtra(AppConstants.USER_NAME, userName);

@@ -42,6 +42,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -100,6 +101,17 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        Intent getUserDetailsIntent = getIntent();
+        if (getUserDetailsIntent != null) {
+            userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
+            userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
+            userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
+            phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
+
+        }
+
+
         mContext = getApplicationContext();
         mRequestingLocationUpdates = false;
         mLastUpdateTime = "";
@@ -108,7 +120,6 @@ public class MainActivity extends BaseActivity {
         updateValuesFromBundle(savedInstanceState);
 
         alertsCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
-
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         mSettingsClient = LocationServices.getSettingsClient(this);
         geocoder = new Geocoder(this, Locale.getDefault());
@@ -153,14 +164,6 @@ public class MainActivity extends BaseActivity {
                 }));
 
 
-        Intent getUserDetailsIntent = getIntent();
-        if (getUserDetailsIntent != null) {
-            userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
-            userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
-            userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
-            phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
-
-        }
 
     }
 
@@ -177,7 +180,6 @@ public class MainActivity extends BaseActivity {
         intent.putExtra(AppConstants.LATITUDE, latitude);
         intent.putExtra(AppConstants.LONGITUDE, longitude);
         intent.putExtra(AppConstants.UID, userId);
-
 
         startActivity(intent);
 
@@ -347,8 +349,13 @@ public class MainActivity extends BaseActivity {
      * Return the current state of the permissions needed.
      */
     private boolean checkPermissions() {
-        int permissionState = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION);
+        int permissionState = 0;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+            permissionState = ActivityCompat.checkSelfPermission(this,
+                    Arrays.toString(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
+                            Manifest.permission.ACCESS_COARSE_LOCATION,
+                            Manifest.permission.ACCESS_BACKGROUND_LOCATION}));
+        }
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
 

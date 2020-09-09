@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -236,6 +237,8 @@ public class ReportActivity extends AppCompatActivity {
                 pd.dismiss();
 
             }
+
+            Log.i("TAG", "fromTask: " + filePath.getDownloadUrl());
             return filePath.getDownloadUrl();
 
         }).addOnCompleteListener(task -> {
@@ -244,6 +247,8 @@ public class ReportActivity extends AppCompatActivity {
                 Uri downLoadUri = task.getResult();
                 assert downLoadUri != null;
                 String url = downLoadUri.toString();
+                Log.i("TAG", "onComplete: " + url);
+
 
                 Map<String, Object> alertItems = new HashMap<>();
                 alertItems.put("userName", userName);
@@ -269,10 +274,10 @@ public class ReportActivity extends AppCompatActivity {
                         DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
                         startActivity(new Intent(ReportActivity.this, MainActivity.class)
-                                .putExtra(AppConstants.UID, id)
+                              /*  .putExtra(AppConstants.UID, id)
                                 .putExtra(AppConstants.USER_NAME, userName)
                                 .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
-                                .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
+                                .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)*/
 
 
                         );

@@ -297,7 +297,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     try {
                         //   mediaPlayer.reset();
                         mediaPlayer.start();
-                        mediaPlayer.setLooping(true);
+                     //   mediaPlayer.setLooping(true);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -315,7 +315,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.reset();
                         mediaPlayer.stop();
-                        mediaPlayer.setLooping(false);
+                        //   mediaPlayer.setLooping(false);
                     }
                 } catch (Exception e) {
 

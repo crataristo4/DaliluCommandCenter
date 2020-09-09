@@ -45,6 +45,11 @@ public class HomeFragment extends Fragment {
             .getInstance()
             .collection("Alerts");
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -125,7 +130,7 @@ public class HomeFragment extends Fragment {
             adapter.notifyDataSetChanged();
         });*/
 
-        arrayList.clear();
+        //arrayList.clear();
         //get data from model
         //group data by images
         //group data by Videos

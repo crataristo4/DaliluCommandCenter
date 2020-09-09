@@ -14,6 +14,8 @@
 
     <uses-feature android:name="android.hardware.location.gps" />
 
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -22,6 +24,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+
 
     <application
         android:name=".Dalilu"
@@ -41,6 +44,13 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <!-- <meta-data
+             android:name="com.google.android.maps.v2.API_KEY"
+             android:value="AIzaSyDpYsfM3KzfxxoC2R9cjlJIClQz5lrfd0o"/>
+ -->
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
@@ -51,7 +61,9 @@
             android:name=".ui.activities.MainActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -67,6 +79,7 @@
             android:name=".ui.activities.SplashScreenActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -121,6 +134,9 @@
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
+        <activity android:name=".auth.PhoneAuthActivity">
+
+        </activity>
     </application>
 
 </manifest>
