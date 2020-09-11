@@ -20,6 +20,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -116,9 +117,17 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
                     String dot = String.valueOf(Html.fromHtml("&#9673;"));
 
-                    marker = new MarkerOptions().position(latLng)
-                            .title(userName + " " + dot + " " + GetTimeAgo.getTimeAgo(timeStampX))
-                            .snippet(address + " " + dot + " " + dateReported);
+                    if (!isSolved) {
+                        marker = new MarkerOptions().position(latLng)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
+                                .title(userName + " " + dot + " " + GetTimeAgo.getTimeAgo(timeStampX))
+                                .snippet(address + " " + dot + " " + dateReported);
+                    } else {
+                        marker = new MarkerOptions().position(latLng)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                                .title(userName + " " + dot + " " + GetTimeAgo.getTimeAgo(timeStampX))
+                                .snippet("Seen by police " + " " + dot);
+                    }
 
                     mMap.addMarker(marker);
 

@@ -165,14 +165,16 @@ public class HomeFragment extends Fragment {
                 }
                 //group data by Videos
                 else if (ds.getData().containsKey("video")) {
-/*
+
                     arrayList.add(new AlertItems(AppConstants.VIDEO_TYPE,
+                            id,
                             userName,
                             url,
                             userPhotoUrl,
                             timeStamp,
-                            address
-                    ));*/
+                            address,
+                            isSolved
+                    ));
                 }
 
             }

@@ -11,17 +11,16 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.adapters.CommentsAdapter;
 import com.dalilu.commandCenter.model.Message;
@@ -31,7 +30,6 @@ import com.dalilu.commandCenter.utils.FileUtils;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
 import com.dalilu.commandCenter.utils.PermissionUtils;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
@@ -41,7 +39,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,7 +52,7 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class CommentsActivity extends AppCompatActivity {
-    private String getAlertItemId, getAlertPhotoUrl, getAddress, getDatePosted;
+    private String id, url, getAddress, getDatePosted, type;
     private CommentsAdapter adapter;
     private EmojiconEditText emojiconEditText;
     private ArrayList<Message> commentList;
@@ -73,6 +70,7 @@ public class CommentsActivity extends AppCompatActivity {
     private static final String TAG = "CommentsActivity";
     private ListenerRegistration registration;
     private CollectionReference commentsRef;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,28 +140,14 @@ public class CommentsActivity extends AppCompatActivity {
         Intent getCommentsIntent = getIntent();
         if (getCommentsIntent != null) {
 
-            getAlertItemId = getCommentsIntent.getStringExtra("alertItemId");
+            id = getCommentsIntent.getStringExtra("id");
             getAddress = getCommentsIntent.getStringExtra("address");
             getDatePosted = getCommentsIntent.getStringExtra("datePosted");
-            getAlertPhotoUrl = getCommentsIntent.getStringExtra("alertPhotoUrl");
+
         }
 
-        commentsRef = FirebaseFirestore.getInstance().collection("Comments").document(getAlertItemId).collection(getAlertItemId);
+        commentsRef = FirebaseFirestore.getInstance().collection("Comments").document(id).collection(id);
 
-        commentsRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                int count = 0;
-                Log.i(TAG, "Num of items: " + task.getResult().size());
-                for (DocumentSnapshot ds : task.getResult()) {
-                    count++;
-
-
-                }
-
-
-            }
-
-        });
 
         StorageReference audioFilePath = FirebaseStorage.getInstance().getReference().child("audio");
         filePath = audioFilePath.child(UUID.randomUUID().toString());
@@ -179,16 +163,6 @@ public class CommentsActivity extends AppCompatActivity {
         btnRecord.setOnClickListener(v -> voiceRecordingAction());
         pd = DisplayViewUI.displayProgress(this, getResources().getString(R.string.uploadingPleaseWait));
 
-        TextView txtItemDes = findViewById(R.id.txtItemDescription);
-        TextView txtDatePosted = findViewById(R.id.txtDatePosted);
-        ImageView imgItemImage = findViewById(R.id.imgItemImage);
-
-        txtItemDes.setText(MessageFormat.format("{0}{1}", getString(R.string.loc), getAddress));
-        txtDatePosted.setText(MessageFormat.format("{0}{1}", getString(R.string.dt), getDatePosted));
-        Glide.with(this)
-                .load(getAlertPhotoUrl).thumbnail(0.5f)
-                .centerCrop()
-                .into(imgItemImage);
 
         findViewById(R.id.btnComment).setOnClickListener(v -> addComment());
 
@@ -206,8 +180,6 @@ public class CommentsActivity extends AppCompatActivity {
 
         adapter = new CommentsAdapter(commentList, CommentsActivity.this);
         recyclerView.setAdapter(adapter);
-
-
 
 
     }
@@ -236,7 +208,7 @@ public class CommentsActivity extends AppCompatActivity {
                 emojiconEditText.setHint(R.string.rcAud);
                 emojiconEditText.setHintTextColor(getResources().getColor(R.color.colorRed));
                 emojiconEditText.setEnabled(false);
-                btnRecord.setImageDrawable(getResources().getDrawable(R.drawable.ic_stop_black_24px));
+                btnRecord.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_black_24px));
 
 
                 initializeMediaRecord();
@@ -246,7 +218,7 @@ public class CommentsActivity extends AppCompatActivity {
                 emojiconEditText.setHint(getResources().getString(R.string.type_your_comments_here));
                 emojiconEditText.setHintTextColor(getResources().getColor(R.color.black));
                 emojiconEditText.setEnabled(true);
-                btnRecord.setImageDrawable(getResources().getDrawable(R.drawable.ic_baseline_keyboard_voice_24));
+                btnRecord.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_baseline_keyboard_voice_24));
                 stopRecordingAudio();
                 uploadAudioRecording(Uri.fromFile(new File(recordPath)));
             }

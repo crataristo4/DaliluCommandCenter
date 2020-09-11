@@ -1,5 +1,6 @@
 <resources>
     <dimen name="eightDp">8dp</dimen>
+    <dimen name="fourDp">4dp</dimen>
     <dimen name="eightyDp">80dp</dimen>
     <dimen name="OneFiftyDp">150dp</dimen>
 

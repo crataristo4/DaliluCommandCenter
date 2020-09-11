@@ -31,8 +31,8 @@
     <string name="ok">OK</string>
     <string name="errMsg">Location settings are inadequate, and cannot be </string>
     <string name="fixIn">fixed here. Fix in Settings.</string>
-    <string name="loc">Location: \n</string>
-    <string name="dt">Date reported: \n</string>
+    <string name="loc">Location: </string>
+    <string name="dt">Date reported: </string>
     <string name="type_your_comments_here">Type your comments here</string>
     <string name="upload">Upload</string>
     <string name="reportAct">Report an activity</string>

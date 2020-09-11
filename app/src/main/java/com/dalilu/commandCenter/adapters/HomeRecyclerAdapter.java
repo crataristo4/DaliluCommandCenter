@@ -31,7 +31,7 @@ import com.bumptech.glide.request.target.Target;
 import com.dalilu.commandCenter.Dalilu;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ImageTypeGridBinding;
-import com.dalilu.commandCenter.databinding.VideoTypeBinding;
+import com.dalilu.commandCenter.databinding.VideoTypeGridBinding;
 import com.dalilu.commandCenter.model.AlertItems;
 import com.dalilu.commandCenter.ui.activities.CommentsActivity;
 import com.dalilu.commandCenter.ui.activities.ImageViewActivity;
@@ -48,10 +48,29 @@ import java.util.ArrayList;
 
 public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ArrayList<AlertItems> dataSet;
+    Context context;
 
 
     public HomeRecyclerAdapter(ArrayList<AlertItems> data, Context context) {
         this.dataSet = data;
+        this.context = context;
+
+    }
+
+    public static void numOfComments(TextView txtComments, String postId) {
+
+        CollectionReference commentsCf = FirebaseFirestore.getInstance().collection("Comments").document(postId).collection(postId);
+
+        commentsCf.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+
+                txtComments.setText(MessageFormat.format("{0} Comments", task.getResult().size()));
+
+
+            }
+
+        });
+
 
     }
 
@@ -62,7 +81,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         switch (viewType) {
             case AppConstants.VIDEO_TYPE:
 
-                return new VideoTypeViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.video_type, parent, false));
+                return new VideoTypeViewHolder(DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.video_type_grid, parent, false));
 
             case AppConstants.IMAGE_TYPE:
 
@@ -75,6 +94,30 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
+
+    @Override
+    public int getItemViewType(int position) {
+
+        switch (dataSet.get(position).type) {
+            case 0:
+                return AppConstants.VIDEO_TYPE;
+            case 1:
+                return AppConstants.IMAGE_TYPE;
+           /* case 2:
+                return AppConstants.AUDIO_TYPE;*/
+            default:
+                return -1;
+
+        }
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return dataSet == null ? 0 : dataSet.size();
+    }
+
     @SuppressLint({"CheckResult", "UseCompatLoadingForDrawables"})
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, final int listPosition) {
@@ -85,8 +128,16 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         requestOptions.error(DisplayViewUI.getRandomDrawableColor());
         requestOptions.centerCrop();
 
+        Intent commentsIntent = new Intent(context, CommentsActivity.class);
+
+
         AlertItems object = dataSet.get(listPosition);
         if (object != null) {
+
+            commentsIntent.putExtra("id", object.getId());
+            commentsIntent.putExtra("url", object.getUrl());
+            commentsIntent.putExtra("address", object.address);
+            commentsIntent.putExtra("datePosted", object.getDateReported());
 
             switch (object.type) {
                 case AppConstants.VIDEO_TYPE:
@@ -95,6 +146,11 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((VideoTypeViewHolder) holder).videoTypeBinding.setVideoType(object);
                     //show time
                     ((VideoTypeViewHolder) holder).videoTypeBinding.txtTime.setText(GetTimeAgo.getTimeAgo(object.getTimeStamp()));
+                    //check if video is seen by police
+                    ((VideoTypeViewHolder) holder).isCrimeSolved(object.isSolved());
+
+                    numOfComments(((VideoTypeViewHolder) holder).txtComments, object.getId());
+
                     //load users images into views
                     Glide.with(((VideoTypeViewHolder) holder).videoTypeBinding.getRoot().getContext())
                             .load(object.getUserPhotoUrl())
@@ -119,6 +175,14 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((ViewGroup) mediaController.getParent()).removeView(mediaController);
 
                     ((VideoTypeViewHolder) holder).frameLayout.addView(mediaController);
+
+                    //comment on click
+                    ((VideoTypeViewHolder) holder).txtComments.setOnClickListener(view -> {
+
+                        commentsIntent.putExtra("type", AppConstants.VIDEO_EXTENSION);
+                        view.getContext().startActivity(commentsIntent);
+
+                    });
 
 
                     break;
@@ -164,30 +228,31 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((ImageTypeViewHolder) holder).isCrimeSolved(object.isSolved());
 
 
-                    ((ImageTypeViewHolder) holder).numOfComments(((ImageTypeViewHolder) holder).txtComments, object.getId());
+                    //shows the number of comments on the post
+                    numOfComments(((ImageTypeViewHolder) holder).txtComments, object.getId());
 
-                    ((ImageTypeViewHolder) holder).imgAlertPhoto.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent img = new Intent(view.getContext(), ImageViewActivity.class);
-                            img.putExtra(AppConstants.UID, object.getId());
-                            img.putExtra(AppConstants.OBJECT_URL, object.getUrl());
-                            img.putExtra(AppConstants.KNOWN_LOCATION, object.address);
-                            img.putExtra(AppConstants.DATE_TIME, object.getDateReported());
-                            img.putExtra(AppConstants.USER_NAME, object.getUserName());
+                    ((ImageTypeViewHolder) holder).imgAlertPhoto.setOnClickListener(view -> {
+                        Intent img = new Intent(view.getContext(), ImageViewActivity.class);
+                        img.putExtra(AppConstants.UID, object.getId());
+                        img.putExtra(AppConstants.OBJECT_URL, object.getUrl());
+                        img.putExtra(AppConstants.KNOWN_LOCATION, object.address);
+                        img.putExtra(AppConstants.DATE_TIME, object.getDateReported());
+                        img.putExtra(AppConstants.USER_NAME, object.getUserName());
 
-                            view.getContext().startActivity(img);
+                        view.getContext().startActivity(img);
 
-                        }
                     });
 
                     ((ImageTypeViewHolder) holder).txtComments.setOnClickListener(view -> {
+                        commentsIntent.putExtra("type", AppConstants.IMAGE_EXTENSION);
 
-                        Intent commentsIntent = new Intent(view.getContext(), CommentsActivity.class);
-                        commentsIntent.putExtra("alertItemId", object.getId());
-                        commentsIntent.putExtra("alertPhotoUrl", object.getUrl());
+
+                       /* Intent commentsIntent = new Intent(view.getContext(), CommentsActivity.class);
+                        commentsIntent.putExtra("id", object.getId());
+                        commentsIntent.putExtra("type", AppConstants.IMAGE_TYPE);
+                        commentsIntent.putExtra("url", object.getUrl());
                         commentsIntent.putExtra("address", object.address);
-                        commentsIntent.putExtra("datePosted", object.getDateReported());
+                        commentsIntent.putExtra("datePosted", object.getDateReported());*/
 
                         view.getContext().startActivity(commentsIntent);
 
@@ -202,42 +267,69 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     }
 
-
-    @Override
-    public int getItemViewType(int position) {
-
-        switch (dataSet.get(position).type) {
-            case 0:
-                return AppConstants.VIDEO_TYPE;
-            case 1:
-                return AppConstants.IMAGE_TYPE;
-           /* case 2:
-                return AppConstants.AUDIO_TYPE;*/
-            default:
-                return -1;
-
-        }
-
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return dataSet == null ? 0 : dataSet.size();
-    }
-
     //view holder for videos
     static class VideoTypeViewHolder extends RecyclerView.ViewHolder {
-        final VideoTypeBinding videoTypeBinding;
+        final VideoTypeGridBinding videoTypeBinding;
         final VideoView videoView;
         final FrameLayout frameLayout;
+        final RippleBackground rippleBackground;
+        final MediaPlayer mediaPlayer;
+        final ImageView imgChecked;
+        final TextView txtComments;
 
-
-        VideoTypeViewHolder(@NonNull VideoTypeBinding videoTypeBinding) {
+        VideoTypeViewHolder(@NonNull VideoTypeGridBinding videoTypeBinding) {
             super(videoTypeBinding.getRoot());
             this.videoTypeBinding = videoTypeBinding;
             videoView = videoTypeBinding.videoContentPreview;
             frameLayout = videoTypeBinding.controllerAnchor;
+            rippleBackground = videoTypeBinding.rippleContent;
+            imgChecked = videoTypeBinding.imgChecked;
+            txtComments = videoTypeBinding.txtComments;
+            mediaPlayer = MediaPlayer.create(videoTypeBinding.getRoot().getContext(), R.raw.alarm);
+
+        }
+
+        public void isCrimeSolved(boolean isSolved) {
+
+            if (!isSolved) {
+
+                rippleBackground.setVisibility(View.VISIBLE);
+                imgChecked.setVisibility(View.GONE);
+                frameLayout.setVisibility(View.GONE);
+                rippleBackground.startRippleAnimation();
+                videoView.setVisibility(View.GONE);
+
+                if (!mediaPlayer.isPlaying()) {
+                    try {
+                        //   mediaPlayer.reset();
+                        mediaPlayer.start();
+                        //   mediaPlayer.setLooping(true);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+            } else {
+
+                rippleBackground.setVisibility(View.GONE);
+                imgChecked.setVisibility(View.VISIBLE);
+                frameLayout.setVisibility(View.VISIBLE);
+                rippleBackground.stopRippleAnimation();
+                videoView.setVisibility(View.VISIBLE);
+
+                try {
+                    if (mediaPlayer.isPlaying()) {
+                        mediaPlayer.reset();
+                        mediaPlayer.stop();
+                        //   mediaPlayer.setLooping(false);
+                    }
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+            }
 
 
         }
@@ -266,25 +358,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
-        private void numOfComments(TextView txtComments, String postId) {
 
-            CollectionReference commentsCf = FirebaseFirestore.getInstance().collection("Comments").document(postId).collection(postId);
-
-            commentsCf.get().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-
-                    txtComments.setText(MessageFormat.format("{0} Comments", task.getResult().size()));
-
-
-                }
-
-            });
-
-
-        }
-
-
-        private void isCrimeSolved(boolean isSolved){
+        public void isCrimeSolved(boolean isSolved) {
 
             if (!isSolved) {
 
@@ -329,7 +404,6 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
 
     }
-
 
 
 }

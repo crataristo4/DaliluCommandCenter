@@ -182,32 +182,67 @@ public class ReportActivity extends AppCompatActivity {
      */
     private void requestCameraPermission(final int type) {
 
-        Dexter.withContext(ReportActivity.this)
-                .withPermissions(Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.RECORD_AUDIO)
-                .withListener(new MultiplePermissionsListener() {
-                    @Override
-                    public void onPermissionsChecked(MultiplePermissionsReport report) {
-                        if (report.areAllPermissionsGranted()) {
+        if (type == AppConstants.MEDIA_TYPE_IMAGE) {
+            Dexter.withContext(ReportActivity.this)
+                    .withPermissions(Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                            Manifest.permission.RECORD_AUDIO)
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            if (report.areAllPermissionsGranted()) {
 
-                            if (type == AppConstants.MEDIA_TYPE_IMAGE) {
-                                // capture picture
                                 captureImage();
-                            } else {
-                                captureVideo();
+                               /* if (type == AppConstants.MEDIA_TYPE_IMAGE) {
+                                    // capture picture
+                                    captureImage();
+                                } else {
+                                    captureVideo();
+                                }*/
+
+                            } else if (report.isAnyPermissionPermanentlyDenied()) {
+                                showPermissionsAlert();
                             }
-
-                        } else if (report.isAnyPermissionPermanentlyDenied()) {
-                            showPermissionsAlert();
                         }
-                    }
 
-                    @Override
-                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
-                        token.continuePermissionRequest();
-                    }
-                }).check();
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                            token.continuePermissionRequest();
+                        }
+                    }).check();
+        } else if (type == AppConstants.MEDIA_TYPE_VIDEO) {
+
+            Dexter.withContext(ReportActivity.this)
+                    .withPermissions(Manifest.permission.CAMERA,
+                            Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    .withListener(new MultiplePermissionsListener() {
+                        @Override
+                        public void onPermissionsChecked(MultiplePermissionsReport report) {
+                            if (report.areAllPermissionsGranted()) {
+
+                                captureVideo();
+
+                               /* if (type == AppConstants.MEDIA_TYPE_IMAGE) {
+                                    // capture picture
+                                    captureImage();
+                                } else {
+                                }*/
+
+                            } else if (report.isAnyPermissionPermanentlyDenied()) {
+                                showPermissionsAlert();
+                            }
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                            token.continuePermissionRequest();
+                        }
+                    }).check();
+
+        }
+
+
     }
 
     /**
