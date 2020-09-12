@@ -55,7 +55,7 @@ dependencies {
     testImplementation 'junit:junit:4.13-beta-3'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.google.android.material:material:1.2.0'
+    implementation 'com.google.android.material:material:1.2.1'
 
     //google play services
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
@@ -65,7 +65,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-nearby:17.0.0'
     implementation 'androidx.preference:preference:1.1.1'
     //firebase
-    implementation 'com.google.firebase:firebase-auth:19.3.2'
+    implementation 'com.google.firebase:firebase-auth:19.4.0'
     implementation 'com.google.firebase:firebase-database:19.4.0'
     implementation 'com.google.firebase:firebase-functions:19.1.0'
     implementation 'com.google.firebase:firebase-core:17.5.0'

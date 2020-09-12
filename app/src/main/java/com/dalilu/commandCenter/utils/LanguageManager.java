@@ -26,22 +26,12 @@ public class LanguageManager {
      */
     private static final String LANGUAGE_KEY = "language_key";
 
-    /**
-     * set current pref locale
-     *
-     * @param mContext
-     * @return
-     */
+
     public static Context setLocale(Context mContext) {
         return updateResources(mContext, getLanguagePref(mContext));
     }
 
-    /**
-     * Set new Locale with context
-     *
-     * @param mContext
-     * @param mLocaleKey
-     */
+
     public static void setNewLocale(Context mContext, String mLocaleKey) {
         setLanguagePref(mContext, mLocaleKey);
         updateResources(mContext, mLocaleKey);
@@ -59,24 +49,12 @@ public class LanguageManager {
         return mPreferences.getString(LANGUAGE_KEY, "");
     }
 
-    /**
-     * set pref key
-     *
-     * @param mContext
-     * @param localeKey
-     */
+
     private static void setLanguagePref(Context mContext, String localeKey) {
         SharedPreferences mPreferences = PreferenceManager.getDefaultSharedPreferences(mContext);
         mPreferences.edit().putString(LANGUAGE_KEY, localeKey).apply();
     }
 
-    /**
-     * update resource
-     *
-     * @param context
-     * @param language
-     * @return
-     */
     private static Context updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);

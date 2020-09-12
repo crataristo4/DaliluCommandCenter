@@ -69,5 +69,12 @@
     <string name="plsWait">Verification en cours. Attendez s\'il vous plait</string>
     <string name="noInternet">Aucune connexion internet n\'est necessaire. Contactez votre fournisseur de service si le probleme persiste</string>
     <string name="codeShort">Code trop court.</string>
+    <string name="notSeen">Case NOT seen</string>
+    <string name="pstBy">Posted by : {0}\n\n</string>
+    <string name="locDet">Location and Details : {1}\n\n</string>
+    <string name="thisCse">This case has not been seen by the police!</string>
+    <string name="flUp">FOLLOW UP</string>
+    <string name="caseSeen">Case has been seen by the Police</string>
+    <string name="snBy">\"Seen by police \"</string>
 
 </resources>

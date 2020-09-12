@@ -52,7 +52,9 @@ import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class CommentsActivity extends AppCompatActivity {
-    private String id, url, getAddress, getDatePosted, type;
+    private String id;
+    private String url;
+    private String type;
     private CommentsAdapter adapter;
     private EmojiconEditText emojiconEditText;
     private ArrayList<Message> commentList;
@@ -79,13 +81,11 @@ public class CommentsActivity extends AppCompatActivity {
 
         Toolbar commentToolBar = findViewById(R.id.commentsToolBar);
         setSupportActionBar(commentToolBar);
-        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
 
         initViews();
-        // loadData();
-        //   runOnUiThread(this::fetchCommentsData);
-        fetchCommentsData();
+        runOnUiThread(this::fetchCommentsData);
+        //  fetchCommentsData();
 
 
     }
@@ -141,8 +141,8 @@ public class CommentsActivity extends AppCompatActivity {
         if (getCommentsIntent != null) {
 
             id = getCommentsIntent.getStringExtra("id");
-            getAddress = getCommentsIntent.getStringExtra("address");
-            getDatePosted = getCommentsIntent.getStringExtra("datePosted");
+            String getAddress = getCommentsIntent.getStringExtra("address");
+            String getDatePosted = getCommentsIntent.getStringExtra("datePosted");
 
         }
 

@@ -86,11 +86,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 String id = ds.getId();
                 String dateReported = alertItems.getDateReported();
-                Log.i(TAG, "Lat: " + geoPoint.getLatitude() + " Lng: " + geoPoint.getLongitude());
 
                 LatLng latLng = new LatLng(geoPoint.getLatitude(), geoPoint.getLongitude());
                 String dot = String.valueOf(Html.fromHtml("&#9673;"));
-                String seen = "Seen by police " + " " + dot;
+                String seen = getString(R.string.snBy) + " " + dot;
 
                 if (!isSolved) {
                     marker = new MarkerOptions().position(latLng)
@@ -114,24 +113,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                         DisplayViewUI.displayAlertDialog(this,
                                 seen,
-                                "Case has been seen by the Police",
-                                "OK",
+                                getString(R.string.caseSeen),
+                                getString(R.string.ok),
 
-                                (dialogInterface, i) -> {
-
-                                    dialogInterface.dismiss();
-
-                                });
+                                (dialogInterface, i) -> dialogInterface.dismiss());
 
                     } else {
 
                         DisplayViewUI.displayAlertDialog(MapsActivity.this,
-                                "Case NOT seen",
-                                MessageFormat.format("Posted by : {0}\n\n"
-                                                + "Location and Details : {1}\n\n" +
-                                                "This case has not been seen by the police!",
+                                getString(R.string.notSeen),
+                                MessageFormat.format(getString(R.string.pstBy)
+                                                + getString(R.string.locDet) +
+                                                getString(R.string.thisCse),
                                         marker.getTitle(), marker.getSnippet()),
-                                "FOLLOW UP",
+                                getString(R.string.flUp),
                                 (dialogInterface, i) -> dialogInterface.dismiss()
 
                         );

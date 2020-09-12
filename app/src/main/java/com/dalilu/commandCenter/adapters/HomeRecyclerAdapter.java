@@ -47,7 +47,7 @@ import java.util.ArrayList;
 
 public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final ArrayList<AlertItems> dataSet;
-    Context context;
+    final Context context;
 
 
     public HomeRecyclerAdapter(ArrayList<AlertItems> data, Context context) {
@@ -246,16 +246,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     ((ImageTypeViewHolder) holder).txtComments.setOnClickListener(view -> {
                         commentsIntent.putExtra("type", AppConstants.IMAGE_EXTENSION);
 
-
-                       /* Intent commentsIntent = new Intent(view.getContext(), CommentsActivity.class);
-                        commentsIntent.putExtra("id", object.getId());
-                        commentsIntent.putExtra("type", AppConstants.IMAGE_TYPE);
-                        commentsIntent.putExtra("url", object.getUrl());
-                        commentsIntent.putExtra("address", object.address);
-                        commentsIntent.putExtra("datePosted", object.getDateReported());*/
-
                         view.getContext().startActivity(commentsIntent);
-
 
                     });
 

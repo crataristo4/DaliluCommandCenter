@@ -21,7 +21,7 @@
             map:layout_constraintTop_toTopOf="parent"
             map:title="@string/app_name" />
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:id="@+id/map"
             android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="0dp"
