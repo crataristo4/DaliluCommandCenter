@@ -22,6 +22,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.dalilu.commandCenter.MapsActivity;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityMainBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
@@ -141,7 +142,7 @@ public class MainActivity extends BaseActivity {
         MenuItem menuItemHome = menu.findItem(R.id.navigation_home);
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.navigation_home, R.id.navigation_maps)
+                R.id.navigation_home)
                 .build();
 
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -162,7 +163,6 @@ public class MainActivity extends BaseActivity {
                         badgeDrawableHome.setNumber(task.getResult().size());
 
                 }));
-
 
 
     }
@@ -189,14 +189,16 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.switch_list_menu,menu);
+        getMenuInflater().inflate(R.menu.switch_list_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.reportMenu){
+        if (item.getItemId() == R.id.reportMenu) {
             myIntent();
+        } else if (item.getItemId() == R.id.navigation_maps) {
+            startActivity(new Intent(this, MapsActivity.class));
         }
         return true;
     }
@@ -435,7 +437,6 @@ public class MainActivity extends BaseActivity {
                     //updateUI();
                 });
     }
-
 
 
     @Override

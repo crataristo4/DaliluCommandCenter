@@ -10,11 +10,11 @@
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+   <!-- <fragment
         android:id="@+id/navigation_maps"
         android:name="com.dalilu.commandCenter.ui.map.MapFragment"
         android:label="@string/title_activity_maps"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" />-->
 
 
 </navigation>

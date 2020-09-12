@@ -6,10 +6,6 @@
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/alerts" />
 
-    <item
-        android:id="@+id/navigation_maps"
-        android:icon="@drawable/ic_baseline_map_24"
-        android:title="@string/title_activity_maps" />
 
 
 

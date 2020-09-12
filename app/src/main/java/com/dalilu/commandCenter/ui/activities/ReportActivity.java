@@ -312,15 +312,15 @@ public class ReportActivity extends AppCompatActivity {
 
             DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
-            startActivity(new Intent(ReportActivity.this, MainActivity.class)
+           /* startActivity(new Intent(ReportActivity.this, MainActivity.class)
                     .putExtra(AppConstants.UID, id)
                     .putExtra(AppConstants.USER_NAME, userName)
                     .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
                     .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
 
 
-            );
-            finish();
+            );*/
+            this.finishAffinity();
 
 
         }).addOnFailureListener(this, e -> {
