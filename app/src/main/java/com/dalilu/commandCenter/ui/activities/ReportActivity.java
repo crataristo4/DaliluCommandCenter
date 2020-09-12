@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,7 +41,9 @@ import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -51,6 +52,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+
+import static android.provider.MediaStore.Images.Media.getBitmap;
 
 public class ReportActivity extends AppCompatActivity {
 
@@ -193,6 +196,7 @@ public class ReportActivity extends AppCompatActivity {
                             if (report.areAllPermissionsGranted()) {
 
                                 captureImage();
+
                                /* if (type == AppConstants.MEDIA_TYPE_IMAGE) {
                                     // capture picture
                                     captureImage();
@@ -259,14 +263,73 @@ public class ReportActivity extends AppCompatActivity {
                 }).show();
     }
 
-    private void uploadToServer(Uri imageUri, String type) {
+    private void uploadToServer(Uri imageUri, String type) throws IOException {
         pd.show();
         StringBuilder address = new StringBuilder();
         address.append(knownName).append(",").append(state).append(",").append(country);
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
         String dateReported = dateFormat.format(Calendar.getInstance().getTime());
 
+        //compress image
+        Bitmap bitmap;
+        bitmap = getBitmap(getContentResolver(), imageUri);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
+
+        byte[] fileInBytes = byteArrayOutputStream.toByteArray();
         //upload photo to server
+
+        //upload photo to server
+        filePath.putBytes(fileInBytes).continueWithTask(task -> {
+
+            if (!task.isSuccessful()) {
+                pd.dismiss();
+
+            }
+            return filePath.getDownloadUrl();
+
+        }).addOnSuccessListener(this, o -> {
+            pd.dismiss();
+
+            Uri downLoadUri = Uri.parse(o.toString());
+            assert downLoadUri != null;
+            String url = downLoadUri.toString();
+
+            Map<String, Object> alertItems = new HashMap<>();
+            alertItems.put("userName", userName);
+            alertItems.put("userPhotoUrl", userPhotoUrl);
+            alertItems.put("url", url);
+            alertItems.put(type, type);
+            alertItems.put("coordinates", new GeoPoint(latitude, longitude));
+            alertItems.put("address", address.toString());
+            alertItems.put("userId", userId);
+            alertItems.put("phoneNumber", phoneNumber);
+            alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
+            alertItems.put("dateReported", dateReported);
+
+            alertCollectionReference.add(alertItems);
+            String id = MainActivity.userId;
+
+            DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
+
+            startActivity(new Intent(ReportActivity.this, MainActivity.class)
+                    .putExtra(AppConstants.UID, id)
+                    .putExtra(AppConstants.USER_NAME, userName)
+                    .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
+                    .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
+
+
+            );
+            finish();
+
+
+        }).addOnFailureListener(this, e -> {
+            pd.dismiss();
+            DisplayViewUI.displayToast(this, Objects.requireNonNull(e.getMessage()));
+
+        });
+
+/*
         filePath.putFile(imageUri).continueWithTask(task -> {
             if (!task.isSuccessful()) {
                 pd.dismiss();
@@ -309,10 +372,12 @@ public class ReportActivity extends AppCompatActivity {
                         DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
                         startActivity(new Intent(ReportActivity.this, MainActivity.class)
-                              /*  .putExtra(AppConstants.UID, id)
+                              */
+/*  .putExtra(AppConstants.UID, id)
                                 .putExtra(AppConstants.USER_NAME, userName)
                                 .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
-                                .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)*/
+                                .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)*//*
+
 
 
                         );
@@ -334,6 +399,7 @@ public class ReportActivity extends AppCompatActivity {
             }
 
         });
+*/
 
 
     }
@@ -362,7 +428,11 @@ public class ReportActivity extends AppCompatActivity {
                     pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingImage));
 
 //upload to server
-                    uploadToServer(uri, "image");
+                    try {
+                        uploadToServer(uri, "image");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 });
 
 
@@ -395,7 +465,11 @@ public class ReportActivity extends AppCompatActivity {
                     pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingVideo));
 
                     //upload to server
-                    uploadToServer(uri, "video");
+                    try {
+                        uploadToServer(uri, "video");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 });
 

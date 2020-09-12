@@ -368,6 +368,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 rippleBackground.startRippleAnimation();
                 imgAlertPhoto.setVisibility(View.GONE);
 
+/*
                 if (!mediaPlayer.isPlaying()) {
                     try {
                         //   mediaPlayer.reset();
@@ -378,6 +379,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
 
                 }
+*/
 
             }else {
 
@@ -386,6 +388,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 rippleBackground.stopRippleAnimation();
                 imgAlertPhoto.setVisibility(View.VISIBLE);
 
+/*
                 try {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.reset();
@@ -396,6 +399,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     e.printStackTrace();
                 }
+*/
 
             }
 
