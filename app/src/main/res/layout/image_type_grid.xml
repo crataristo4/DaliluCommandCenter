@@ -94,7 +94,7 @@
                         android:layout_height="0dp"
                         android:adjustViewBounds="true"
                         android:contentDescription="@string/app_name"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         card_view:layout_constraintBottom_toBottomOf="parent"
                         card_view:layout_constraintEnd_toEndOf="parent"
                         card_view:layout_constraintStart_toStartOf="parent"

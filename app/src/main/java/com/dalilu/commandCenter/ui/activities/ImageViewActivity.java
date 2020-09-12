@@ -11,6 +11,8 @@ import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityImageViewBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
 
+import java.util.Objects;
+
 public class ImageViewActivity extends AppCompatActivity {
 
     @Override
@@ -20,7 +22,13 @@ public class ImageViewActivity extends AppCompatActivity {
         Intent getImageIntent = getIntent();
 
         if (getImageIntent != null) {
-            activityImageViewBinding.txtCheckBy.setText(R.string.chkkdd);
+            if (Objects.equals(getImageIntent.getBooleanExtra(AppConstants.IS_SOLVED, false), true)) {
+                activityImageViewBinding.txtCheckBy.setText(R.string.chkkdd);
+
+            } else {
+                activityImageViewBinding.txtCheckBy.setText(R.string.notChkkdd);
+
+            }
             activityImageViewBinding.txtDate.setText(getImageIntent.getStringExtra(AppConstants.DATE_TIME));
             activityImageViewBinding.txtLocation.setText(getImageIntent.getStringExtra(AppConstants.KNOWN_LOCATION));
             activityImageViewBinding.txtPostedBy.setText(java.text.MessageFormat.format("Posted by: {0}", getImageIntent.getStringExtra(AppConstants.USER_NAME)));

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.media.MediaPlayer;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -236,6 +235,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                         img.putExtra(AppConstants.UID, object.getId());
                         img.putExtra(AppConstants.OBJECT_URL, object.getUrl());
                         img.putExtra(AppConstants.KNOWN_LOCATION, object.address);
+                        img.putExtra(AppConstants.IS_SOLVED, object.isSolved);
                         img.putExtra(AppConstants.DATE_TIME, object.getDateReported());
                         img.putExtra(AppConstants.USER_NAME, object.getUserName());
 
@@ -273,7 +273,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final VideoView videoView;
         final FrameLayout frameLayout;
         final RippleBackground rippleBackground;
-        final MediaPlayer mediaPlayer;
+        //  final MediaPlayer mediaPlayer;
         final ImageView imgChecked;
         final TextView txtComments;
 
@@ -285,7 +285,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             rippleBackground = videoTypeBinding.rippleContent;
             imgChecked = videoTypeBinding.imgChecked;
             txtComments = videoTypeBinding.txtComments;
-            mediaPlayer = MediaPlayer.create(videoTypeBinding.getRoot().getContext(), R.raw.alarm);
+            //   mediaPlayer = MediaPlayer.create(videoTypeBinding.getRoot().getContext(), R.raw.alarm);
 
         }
 
@@ -299,6 +299,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 rippleBackground.startRippleAnimation();
                 videoView.setVisibility(View.GONE);
 
+/*
                 if (!mediaPlayer.isPlaying()) {
                     try {
                         //   mediaPlayer.reset();
@@ -309,6 +310,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     }
 
                 }
+*/
 
             } else {
 
@@ -318,6 +320,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 rippleBackground.stopRippleAnimation();
                 videoView.setVisibility(View.VISIBLE);
 
+/*
                 try {
                     if (mediaPlayer.isPlaying()) {
                         mediaPlayer.reset();
@@ -328,6 +331,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     e.printStackTrace();
                 }
+*/
 
             }
 
@@ -343,7 +347,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final TextView txtComments;
         final ImageView imgAlertPhoto, imgChecked;
         final RippleBackground rippleBackground;
-        final MediaPlayer mediaPlayer;
+        //  final MediaPlayer mediaPlayer;
 
 
         ImageTypeViewHolder(@NonNull ImageTypeGridBinding imageTypeBinding) {
@@ -353,7 +357,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             rippleBackground = imageTypeBinding.rippleContent;
             imgAlertPhoto = imageTypeBinding.imgContentPhoto;
             imgChecked = imageTypeBinding.imgChecked;
-            mediaPlayer = MediaPlayer.create(imageTypeBinding.getRoot().getContext(), R.raw.alarm);
+            //   mediaPlayer = MediaPlayer.create(imageTypeBinding.getRoot().getContext(), R.raw.alarm);
 
 
         }
@@ -366,7 +370,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 rippleBackground.setVisibility(View.VISIBLE);
                 imgChecked.setVisibility(View.GONE);
                 rippleBackground.startRippleAnimation();
-                imgAlertPhoto.setVisibility(View.GONE);
+                //    imgAlertPhoto.setVisibility(View.GONE);
 
 /*
                 if (!mediaPlayer.isPlaying()) {
@@ -386,7 +390,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 rippleBackground.setVisibility(View.GONE);
                 imgChecked.setVisibility(View.VISIBLE);
                 rippleBackground.stopRippleAnimation();
-                imgAlertPhoto.setVisibility(View.VISIBLE);
+                // imgAlertPhoto.setVisibility(View.VISIBLE);
 
 /*
                 try {

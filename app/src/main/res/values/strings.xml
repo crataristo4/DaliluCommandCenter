@@ -64,6 +64,7 @@
     <string name="invalidPhone">Invalid phone number</string>
     <string name="alerts">Alerts</string>
     <string name="chkkdd">Checked by Police</string>
+    <string name="notChkkdd">Not seen by Police</string>
     <string name="selectLanguage">Choisissez la langue s\'il vous plait</string>
     <string name="plsWait">Verification en cours. Attendez s\'il vous plait</string>
     <string name="noInternet">Aucune connexion internet n\'est necessaire. Contactez votre fournisseur de service si le probleme persiste</string>
