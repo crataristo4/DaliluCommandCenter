@@ -97,11 +97,11 @@ public class ReportActivity extends BaseActivity {
             longitude = BaseActivity.longitude;
 
             //   Log.i("onCreate: ","tags::" + BaseActivity.state + " " + BaseActivity.country + " " + BaseActivity.knownName);
-            Log.i("onCreate: ", "tags::--" + knownName + " " + country + " " + state);
+            Log.i("onCreate: ", longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
 
         }
 
-        updateAddress();
+        // updateAddress();
 
         StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("alerts");
         filePath = imageStorageRef.child(UUID.randomUUID().toString());
@@ -582,6 +582,12 @@ public class ReportActivity extends BaseActivity {
 
         // get the file url
         imageStoragePath = savedInstanceState.getString(KEY_IMAGE_STORAGE_PATH);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
 }
