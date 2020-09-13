@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -94,11 +95,14 @@ public class ReportActivity extends AppCompatActivity {
             userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
             userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
             phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
-            state = getUserDetailsIntent.getStringExtra(AppConstants.STATE);
-            country = getUserDetailsIntent.getStringExtra(AppConstants.COUNTRY);
-            knownName = getUserDetailsIntent.getStringExtra(AppConstants.KNOWN_LOCATION);
-            latitude = getUserDetailsIntent.getDoubleExtra(AppConstants.LATITUDE, 0);
-            longitude = getUserDetailsIntent.getDoubleExtra(AppConstants.LONGITUDE, 0);
+            knownName = BaseActivity.knownName;
+            state = BaseActivity.state;
+            country = BaseActivity.country;
+            latitude = BaseActivity.latitude;
+            longitude = BaseActivity.longitude;
+
+            //   Log.i("onCreate: ","tags::" + BaseActivity.state + " " + BaseActivity.country + " " + BaseActivity.knownName);
+            Log.i("onCreate: ", "tags::--" + knownName + " " + country + " " + state);
 
         }
 
@@ -294,12 +298,14 @@ public class ReportActivity extends AppCompatActivity {
                 alertItems.put("phoneNumber", phoneNumber);
                 alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
                 alertItems.put("dateReported", dateReported);
+                alertItems.put("isSolved", false);
+
 
                 alertCollectionReference.add(alertItems);
                 String id = MainActivity.userId;
 
-                DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
-                this.finishAffinity();
+                // startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                finish();
 
 
             }).addOnFailureListener(this, e -> {
@@ -349,7 +355,7 @@ public class ReportActivity extends AppCompatActivity {
                             pd.dismiss();
                             DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
-                            startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                            //  startActivity(new Intent(ReportActivity.this, MainActivity.class));
                             finish();
 
 

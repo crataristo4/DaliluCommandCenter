@@ -138,6 +138,10 @@ public class MainActivity extends BaseActivity {
         Menu menu = navView.getMenu();
         MenuItem menuItemHome = menu.findItem(R.id.navigation_home);
 
+        state = BaseActivity.state;
+        knownName = BaseActivity.knownName;
+        country = BaseActivity.country;
+
 
         recyclerView = activityMainBinding.recyclerViewHome;
         recyclerView.setHasFixedSize(true);

@@ -7,12 +7,12 @@ import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.databinding.DataBindingUtil;
 
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityVerifyPhoneNumberBinding;
+import com.dalilu.commandCenter.ui.activities.BaseActivity;
 import com.dalilu.commandCenter.ui.activities.MainActivity;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
@@ -28,7 +28,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-public class VerifyPhoneNumberActivity extends AppCompatActivity {
+public class VerifyPhoneNumberActivity extends BaseActivity {
     private static String code = "";
     ActivityVerifyPhoneNumberBinding activityVerifyPhoneNumberBinding;
     private FirebaseAuth mAuth;

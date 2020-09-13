@@ -4,16 +4,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.clickhandler.ItemClickHandler;
 import com.dalilu.commandCenter.databinding.ActivityRegisterPhoneNumberBinding;
+import com.dalilu.commandCenter.ui.activities.BaseActivity;
 import com.dalilu.commandCenter.utils.LanguageManager;
 
 
-public class RegisterPhoneNumberActivity extends AppCompatActivity {
+public class RegisterPhoneNumberActivity extends BaseActivity {
     ActivityRegisterPhoneNumberBinding activityRegisterPhoneNumberBinding;
     ItemClickHandler itemClickHandler;
 

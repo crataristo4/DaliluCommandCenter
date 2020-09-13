@@ -209,6 +209,13 @@ public class BaseActivity extends AppCompatActivity {
                         Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
                                 "Known Name", knownName));
 
+                        Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                                "address ", address));
+                        Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                                "state ", state));
+                        Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                                "country ", country));
+
 
                     }
 
