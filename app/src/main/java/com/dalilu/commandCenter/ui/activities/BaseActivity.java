@@ -44,7 +44,7 @@ public class BaseActivity extends AppCompatActivity {
     /**
      * Time when the location was updated represented as a String.
      */
-    public static String mLastUpdateTime, knownName, state, country, phoneNumber;
+    public static String address, knownName, state, country, phoneNumber;
     public static double latitude, longitude;
     private static Object mContext;
     /**
@@ -77,7 +77,7 @@ public class BaseActivity extends AppCompatActivity {
      * Start Updates and Stop Updates buttons.
      */
     private Boolean mRequestingLocationUpdates;
-    private Geocoder geocoder;
+    public static Geocoder geocoder;
 
     public static Context getAppContext() {
         return (Context) mContext;
@@ -134,11 +134,7 @@ public class BaseActivity extends AppCompatActivity {
                 mCurrentLocation = savedInstanceState.getParcelable(AppConstants.KEY_LOCATION);
             }
 
-            // Update the value of mLastUpdateTime from the Bundle and update the UI.
-            if (savedInstanceState.keySet().contains(AppConstants.KEY_LAST_UPDATED_TIME_STRING)) {
-                mLastUpdateTime = savedInstanceState.getString(AppConstants.KEY_LAST_UPDATED_TIME_STRING);
-            }
-            // updateUI();
+
         }
     }
 
@@ -197,7 +193,7 @@ public class BaseActivity extends AppCompatActivity {
                     List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
 
                     if (addressList != null) {
-                        String address = addressList.get(0).getAddressLine(0);
+                        address = addressList.get(0).getAddressLine(0);
                         state = addressList.get(0).getAdminArea();
                         country = addressList.get(0).getCountryName();
                         knownName = addressList.get(0).getFeatureName();

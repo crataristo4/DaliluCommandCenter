@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.location.Address;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,10 +22,8 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
-import com.bumptech.glide.Glide;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityReportBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
@@ -56,15 +55,16 @@ import java.util.UUID;
 
 import static android.provider.MediaStore.Images.Media.getBitmap;
 
-public class ReportActivity extends AppCompatActivity {
+public class ReportActivity extends BaseActivity {
 
+    private static final String TAG = "ReportActivity";
     private static String imageStoragePath;
     ActivityReportBinding activityReportBinding;
     private StorageReference filePath;
     private Uri uri = null;
     private ProgressDialog pd;
     private CollectionReference alertCollectionReference;
-    private String knownName, state, country, phoneNumber, userId, userName, userPhotoUrl;
+    private String knownName, address, state, country, phoneNumber, userId, userName, userPhotoUrl;
     private double latitude, longitude;
     private ImageView imgPhoto;
     private VideoView videoView;
@@ -81,6 +81,27 @@ public class ReportActivity extends AppCompatActivity {
         activityReportBinding = DataBindingUtil.setContentView(this, R.layout.activity_report);
         setSupportActionBar(activityReportBinding.toolBarReport);
 
+        Intent getUserDetailsIntent = getIntent();
+        if (getUserDetailsIntent != null) {
+            userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
+            userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
+            userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
+            phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
+
+
+            address = BaseActivity.address;
+            state = BaseActivity.state;
+            country = BaseActivity.country;
+            knownName = BaseActivity.knownName;
+            latitude = BaseActivity.latitude;
+            longitude = BaseActivity.longitude;
+
+            //   Log.i("onCreate: ","tags::" + BaseActivity.state + " " + BaseActivity.country + " " + BaseActivity.knownName);
+            Log.i("onCreate: ", "tags::--" + knownName + " " + country + " " + state);
+
+        }
+
+        updateAddress();
 
         StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("alerts");
         filePath = imageStorageRef.child(UUID.randomUUID().toString());
@@ -89,22 +110,6 @@ public class ReportActivity extends AppCompatActivity {
         videoView = activityReportBinding.videoView;
         btnUpload = activityReportBinding.btnUpload;
 
-        Intent getUserDetailsIntent = getIntent();
-        if (getUserDetailsIntent != null) {
-            userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
-            userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
-            userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
-            phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
-            knownName = BaseActivity.knownName;
-            state = BaseActivity.state;
-            country = BaseActivity.country;
-            latitude = BaseActivity.latitude;
-            longitude = BaseActivity.longitude;
-
-            //   Log.i("onCreate: ","tags::" + BaseActivity.state + " " + BaseActivity.country + " " + BaseActivity.knownName);
-            Log.i("onCreate: ", "tags::--" + knownName + " " + country + " " + state);
-
-        }
 
         // Checking availability of the camera
         if (!CameraUtils.isDeviceSupportCamera(getApplicationContext())) {
@@ -123,7 +128,6 @@ public class ReportActivity extends AppCompatActivity {
             }
         });
 
-
         activityReportBinding.fabVideo.setOnClickListener(v -> {
             if (CameraUtils.checkPermissions(v.getContext())) {
                 captureVideo();
@@ -136,6 +140,32 @@ public class ReportActivity extends AppCompatActivity {
         // restoring storage image path from saved instance state
         // otherwise the path will be null on device rotation
         restoreFromBundle(savedInstanceState);
+
+
+    }
+
+    void updateAddress() {
+
+        if (address == null && knownName == null && state == null && country == null) {
+            try {
+                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+
+                if (addressList != null) {
+                    address = addressList.get(0).getAddressLine(0);
+                    state = addressList.get(0).getAdminArea();
+                    country = addressList.get(0).getCountryName();
+                    knownName = addressList.get(0).getFeatureName();
+
+                    Log.i(TAG, "Location: " + address + " --" + state + " --" + country + " --" + knownName);
+
+
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
 
     }
@@ -257,10 +287,14 @@ public class ReportActivity extends AppCompatActivity {
 
     private void uploadToServer(Uri imageUri, String type) throws IOException {
         pd.show();
-        StringBuilder address = new StringBuilder();
-        address.append(knownName).append(",").append(state).append(",").append(country);
+        StringBuilder addressBuilder = new StringBuilder();
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
         String dateReported = dateFormat.format(Calendar.getInstance().getTime());
+
+        updateAddress();
+
+        addressBuilder.append(knownName).append(",").append(state).append(",").append(country);
+
 
         if (type.equals("image")) {
 
@@ -293,7 +327,7 @@ public class ReportActivity extends AppCompatActivity {
                 alertItems.put("url", url);
                 alertItems.put(type, type);
                 alertItems.put("coordinates", new GeoPoint(latitude, longitude));
-                alertItems.put("address", address.toString());
+                alertItems.put("address", addressBuilder.toString());
                 alertItems.put("userId", userId);
                 alertItems.put("phoneNumber", phoneNumber);
                 alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
@@ -303,8 +337,13 @@ public class ReportActivity extends AppCompatActivity {
 
                 alertCollectionReference.add(alertItems);
                 String id = MainActivity.userId;
+                Log.i(TAG, "uploadToServer: " + addressBuilder.toString());
 
-                // startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                startActivity(new Intent(ReportActivity.this, MainActivity.class)
+                        .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
+                        .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
+                        .putExtra(AppConstants.USER_NAME, userName)
+                        .putExtra(AppConstants.UID, userId));
                 finish();
 
 
@@ -331,14 +370,13 @@ public class ReportActivity extends AppCompatActivity {
                     assert downLoadUri != null;
                     String url = downLoadUri.toString();
 
-
                     Map<String, Object> alertItems = new HashMap<>();
                     alertItems.put("userName", userName);
                     alertItems.put("userPhotoUrl", userPhotoUrl);
                     alertItems.put("url", url);
                     alertItems.put(type, type);
                     alertItems.put("coordinates", new GeoPoint(latitude, longitude));
-                    alertItems.put("address", address.toString());
+                    alertItems.put("address", addressBuilder.toString());
                     alertItems.put("userId", userId);
                     alertItems.put("phoneNumber", phoneNumber);
                     alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
@@ -350,12 +388,15 @@ public class ReportActivity extends AppCompatActivity {
                     alertCollectionReference.add(alertItems).addOnCompleteListener(task2 -> {
 
                         if (task2.isSuccessful()) {
-                            String id = MainActivity.userId;
 
                             pd.dismiss();
                             DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
-                            //  startActivity(new Intent(ReportActivity.this, MainActivity.class));
+                            startActivity(new Intent(ReportActivity.this, MainActivity.class)
+                                    .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
+                                    .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
+                                    .putExtra(AppConstants.USER_NAME, userName)
+                                    .putExtra(AppConstants.UID, userId));
                             finish();
 
 
@@ -391,22 +432,27 @@ public class ReportActivity extends AppCompatActivity {
 
                 // Refreshing the gallery
                 CameraUtils.refreshGallery(ReportActivity.this, imageStoragePath);
+                uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
                 previewCapturedImage();
                 //CameraUtils.optimizeBitmap(10,imageStoragePath);
-                uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
-                imgPhoto.setVisibility(View.VISIBLE);
+               /* imgPhoto.setVisibility(View.VISIBLE);
                 videoView.setVisibility(View.GONE);
                 Glide.with(ReportActivity.this).load(uri).into(activityReportBinding.imgAlertPhoto);
-
+*/
                 btnUpload.setOnClickListener(view -> {
                     //display loading
                     pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingImage));
 
 //upload to server
-                    try {
-                        uploadToServer(uri, "image");
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (address == null && knownName == null && state == null && country == null) {
+                        updateAddress();
+                    } else {
+                        //upload to server
+                        try {
+                            uploadToServer(uri, "image");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 });
 
@@ -430,22 +476,22 @@ public class ReportActivity extends AppCompatActivity {
                 uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
                 previewVideo();
 
-                videoView.setVisibility(View.VISIBLE);
+               /* videoView.setVisibility(View.VISIBLE);
                 imgPhoto.setVisibility(View.GONE);
                 videoView.setVideoPath(imageStoragePath);
-                videoView.start();
+                videoView.start();*/
 
                 btnUpload.setOnClickListener(view -> {
-                    //display loading
-                    pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingVideo));
-
-                    //upload to server
-                    try {
-                        uploadToServer(uri, "video");
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    if (address == null && knownName == null && state == null && country == null) {
+                        updateAddress();
+                    } else {
+                        //upload to server
+                        try {
+                            uploadToServer(uri, "video");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-
                 });
 
 
