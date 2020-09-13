@@ -242,6 +242,7 @@ public class MainActivity extends AppCompatActivity implements
         intent.putExtra(AppConstants.UID, userId);
 
         startActivity(intent);
+        finish();
 
 
     }

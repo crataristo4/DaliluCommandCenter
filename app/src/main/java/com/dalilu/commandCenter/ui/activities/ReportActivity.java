@@ -197,8 +197,7 @@ public class ReportActivity extends BaseActivity {
         if (type == AppConstants.MEDIA_TYPE_IMAGE) {
             Dexter.withContext(ReportActivity.this)
                     .withPermissions(Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.RECORD_AUDIO)
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     .withListener(new MultiplePermissionsListener() {
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
