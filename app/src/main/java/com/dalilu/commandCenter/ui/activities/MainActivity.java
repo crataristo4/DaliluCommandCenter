@@ -1,6 +1,7 @@
 package com.dalilu.commandCenter.ui.activities;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements
      * Time when the location was updated represented as a String.
      */
     public static String knownName, state, country, phoneNumber, userId;
+    public static double latitude, longitude;
     private final ArrayList<AlertItems> arrayList = new ArrayList<>();
     private final CollectionReference collectionReference = FirebaseFirestore
             .getInstance()
@@ -266,7 +268,24 @@ public class MainActivity extends AppCompatActivity implements
             // that since this activity is in the foreground, the service can exit foreground mode.
             bindService(new Intent(this, LocationUpdatesService.class), mServiceConnection,
                     Context.BIND_AUTO_CREATE);
-            // myIntent();
+
+
+            DisplayViewUI.displayAlertDialogMsg(this, "Make a report", "Are you sure you want to make a report?",
+                    "No", "Yes", (dialogInterface, i) -> {
+
+                        if (i == -2) {
+                            dialogInterface.dismiss();
+                        } else {
+                            ProgressDialog loading = DisplayViewUI.displayProgress(MainActivity.this, "");
+                            loading.show();
+                            new Handler().postDelayed(() -> {
+                                loading.dismiss();
+                                myIntent();
+
+                            }, 3000);
+                        }
+                    });
+
         } else if (item.getItemId() == R.id.navigation_maps) {
             startActivity(new Intent(this, MapsActivity.class));
         }
@@ -404,7 +423,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    void getAddress(Location mLocation) {
+    void getAddress(@NonNull Location mLocation) {
 
         try {
             List<Address> addressList = geocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
@@ -414,9 +433,12 @@ public class MainActivity extends AppCompatActivity implements
                 state = addressList.get(0).getAdminArea();
                 country = addressList.get(0).getCountryName();
                 knownName = addressList.get(0).getFeatureName();
+                latitude = mLocation.getLatitude();
+                longitude = mLocation.getLongitude();
 
                 Toast.makeText(this, "Address--" + address
-                                + " state--" + state + " country--" + country + " known name" + knownName
+                                + " state--" + state + " country--" + country + " known name--" + knownName
+                                + " Lat--" + latitude + " lng--" + longitude
                         , Toast.LENGTH_LONG).show();
 
                 Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lat",
@@ -471,7 +493,11 @@ public class MainActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
             if (location != null) {
-                getAddress(location);
+                runOnUiThread(() -> {
+
+                    getAddress(location);
+
+                });
                /* Toast.makeText(MainActivity.this, Utils.getLocationText(location),
                         Toast.LENGTH_SHORT).show();*/
             }

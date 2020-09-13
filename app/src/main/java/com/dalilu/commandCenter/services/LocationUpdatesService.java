@@ -9,6 +9,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Binder;
@@ -23,12 +24,16 @@ import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.dalilu.commandCenter.R;
-import com.dalilu.commandCenter.ui.activities.MainActivity;
+import com.dalilu.commandCenter.ui.activities.ReportActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * A bound and started service that is promoted to a foreground service when location updates have
@@ -106,6 +111,7 @@ public class LocationUpdatesService extends Service {
     @Override
     public void onCreate() {
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+        geocoder = new Geocoder(this, Locale.getDefault());
 
         mLocationCallback = new LocationCallback() {
             @Override
@@ -188,7 +194,7 @@ public class LocationUpdatesService extends Service {
         if (!mChangingConfiguration && Utils.requestingLocationUpdates(this)) {
             Log.i(TAG, "Starting foreground service");
 
-            startForeground(NOTIFICATION_ID, getNotification());
+            //  startForeground(NOTIFICATION_ID, getNotification());
         }
         return true; // Ensures onRebind() is called when a client re-binds.
     }
@@ -248,10 +254,10 @@ public class LocationUpdatesService extends Service {
 
         // The PendingIntent to launch activity.
         PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
-                new Intent(this, MainActivity.class), 0);
+                new Intent(this, ReportActivity.class), 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
-                .addAction(R.drawable.ic_launch, getString(R.string.launch_activity),
+                .addAction(R.mipmap.ic_launcher, getString(R.string.launch_activity),
                         activityPendingIntent)
                 .addAction(R.drawable.ic_cancel, getString(R.string.remove_location_updates),
                         servicePendingIntent)
@@ -290,6 +296,7 @@ public class LocationUpdatesService extends Service {
         Log.i(TAG, "New location: " + location);
 
         mLocation = location;
+        getLocation(location);
 
         // Notify anyone listening for broadcasts about the new location.
         Intent intent = new Intent(ACTION_BROADCAST);
@@ -298,7 +305,34 @@ public class LocationUpdatesService extends Service {
 
         // Update notification content if running as a foreground service.
         if (serviceIsRunningInForeground(this)) {
-            mNotificationManager.notify(NOTIFICATION_ID, getNotification());
+            //     mNotificationManager.notify(NOTIFICATION_ID, getNotification());
+        }
+    }
+
+
+    void getLocation(Location mLocation) {
+        try {
+            List<Address> addressList = geocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
+
+            if (addressList != null) {
+                String address = addressList.get(0).getAddressLine(0);
+                state = addressList.get(0).getAdminArea();
+                country = addressList.get(0).getCountryName();
+                knownName = addressList.get(0).getFeatureName();
+
+                Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lat",
+                        mLocation.getLatitude()));
+                Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lng",
+                        mLocation.getLongitude()));
+                Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                        "Known Name", knownName));
+
+
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

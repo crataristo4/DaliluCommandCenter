@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.location.Address;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -89,12 +88,12 @@ public class ReportActivity extends BaseActivity {
             phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
 
 
-            address = BaseActivity.address;
-            state = BaseActivity.state;
-            country = BaseActivity.country;
-            knownName = BaseActivity.knownName;
-            latitude = BaseActivity.latitude;
-            longitude = BaseActivity.longitude;
+            address = MainActivity.address;
+            state = MainActivity.state;
+            country = MainActivity.country;
+            knownName = MainActivity.knownName;
+            latitude = MainActivity.latitude;
+            longitude = MainActivity.longitude;
 
             //   Log.i("onCreate: ","tags::" + BaseActivity.state + " " + BaseActivity.country + " " + BaseActivity.knownName);
             Log.i("onCreate: ", longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
@@ -144,31 +143,7 @@ public class ReportActivity extends BaseActivity {
 
     }
 
-    void updateAddress() {
 
-        if (address == null && knownName == null && state == null && country == null) {
-            try {
-                List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
-
-                if (addressList != null) {
-                    address = addressList.get(0).getAddressLine(0);
-                    state = addressList.get(0).getAdminArea();
-                    country = addressList.get(0).getCountryName();
-                    knownName = addressList.get(0).getFeatureName();
-
-                    Log.i(TAG, "Location: " + address + " --" + state + " --" + country + " --" + knownName);
-
-
-                }
-
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-
-    }
 
 
     /**
@@ -291,7 +266,6 @@ public class ReportActivity extends BaseActivity {
         @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
         String dateReported = dateFormat.format(Calendar.getInstance().getTime());
 
-        updateAddress();
 
         addressBuilder.append(knownName).append(",").append(state).append(",").append(country);
 
@@ -434,26 +408,18 @@ public class ReportActivity extends BaseActivity {
                 CameraUtils.refreshGallery(ReportActivity.this, imageStoragePath);
                 uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
                 previewCapturedImage();
-                //CameraUtils.optimizeBitmap(10,imageStoragePath);
-               /* imgPhoto.setVisibility(View.VISIBLE);
-                videoView.setVisibility(View.GONE);
-                Glide.with(ReportActivity.this).load(uri).into(activityReportBinding.imgAlertPhoto);
-*/
+
                 btnUpload.setOnClickListener(view -> {
                     //display loading
                     pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingImage));
 
-//upload to server
-                    if (address == null && knownName == null && state == null && country == null) {
-                        updateAddress();
-                    } else {
                         //upload to server
                         try {
                             uploadToServer(uri, "image");
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }
+
                 });
 
 
@@ -476,21 +442,12 @@ public class ReportActivity extends BaseActivity {
                 uri = CameraUtils.getOutputMediaFileUri(ReportActivity.this, new File(imageStoragePath));
                 previewVideo();
 
-               /* videoView.setVisibility(View.VISIBLE);
-                imgPhoto.setVisibility(View.GONE);
-                videoView.setVideoPath(imageStoragePath);
-                videoView.start();*/
-
                 btnUpload.setOnClickListener(view -> {
-                    if (address == null && knownName == null && state == null && country == null) {
-                        updateAddress();
-                    } else {
                         //upload to server
                         try {
                             uploadToServer(uri, "video");
                         } catch (IOException e) {
                             e.printStackTrace();
-                        }
                     }
                 });
 

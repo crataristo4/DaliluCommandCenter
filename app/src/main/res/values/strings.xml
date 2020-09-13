@@ -76,7 +76,7 @@
     <string name="flUp">FOLLOW UP</string>
     <string name="caseSeen">Case has been seen by the Police</string>
     <string name="snBy">Seen by police </string>
-    <string name="launch_activity">Launch activity</string>
+    <string name="launch_activity">Report activity</string>
     <string name="location_unknown">Location unknown</string>
     <string name="location_updates_label">Location Updates</string>
 
