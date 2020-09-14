@@ -21,7 +21,6 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -437,10 +436,10 @@ public class MainActivity extends AppCompatActivity implements
                 latitude = mLocation.getLatitude();
                 longitude = mLocation.getLongitude();
 
-                Toast.makeText(this, "Address--" + address
+               /* Toast.makeText(this, "Address--" + address
                                 + " state--" + state + " country--" + country + " known name--" + knownName
                                 + " Lat--" + latitude + " lng--" + longitude
-                        , Toast.LENGTH_LONG).show();
+                        , Toast.LENGTH_LONG).show();*/
 
                 Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lat",
                         mLocation.getLatitude()));
