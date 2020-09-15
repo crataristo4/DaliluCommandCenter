@@ -527,7 +527,7 @@ public class ReportActivity extends BaseActivity {
             videoView.setVisibility(View.VISIBLE);
             imgPhoto.setVisibility(View.GONE);
             videoView.setVideoPath(imageStoragePath);
-            videoView.start();
+           // videoView.start();
 
         } catch (Exception e) {
             e.printStackTrace();
