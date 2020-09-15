@@ -30,6 +30,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.location.SettingsClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -40,11 +43,14 @@ import java.util.Locale;
 public class BaseActivity extends AppCompatActivity {
     private static final String TAG = "BaseActivity";
 
-    public static String userName, userPhotoUrl;
+    public static String uid, phoneNumber, userName, userPhotoUrl;
     /**
      * Time when the location was updated represented as a String.
      */
-    public static String mLastUpdateTime, knownName, state, country, phoneNumber;
+    public static String mLastUpdateTime, knownName, state, country, address;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+    private CollectionReference usersCollectionRef;
     public static double latitude, longitude;
     private static Object mContext;
     /**
@@ -83,10 +89,14 @@ public class BaseActivity extends AppCompatActivity {
         return (Context) mContext;
     }
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
 
         runOnUiThread(() -> {
             mContext = getApplicationContext();
@@ -102,9 +112,11 @@ public class BaseActivity extends AppCompatActivity {
             createLocationCallback();
             createLocationRequest();
             requestPermissions();
+
         });
 
     }
+
 
     @Override
     protected void attachBaseContext(Context base) {
@@ -197,7 +209,7 @@ public class BaseActivity extends AppCompatActivity {
                     List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
 
                     if (addressList != null) {
-                        String address = addressList.get(0).getAddressLine(0);
+                        address = addressList.get(0).getAddressLine(0);
                         state = addressList.get(0).getAdminArea();
                         country = addressList.get(0).getCountryName();
                         knownName = addressList.get(0).getFeatureName();

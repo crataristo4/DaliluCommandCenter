@@ -94,6 +94,8 @@
         <activity
             android:name=".auth.VerifyPhoneNumberActivity"
             android:screenOrientation="portrait"
+            android:clearTaskOnLaunch="true"
+            android:finishOnTaskLaunch="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".auth.RegisterPhoneNumberActivity"

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -37,6 +38,7 @@ public class VerifyPhoneNumberActivity extends BaseActivity {
     String imageUrl;
     private CollectionReference commandCenterRef;
     private String uid;
+    private static final String TAG = "VerifyPhone";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,15 +136,26 @@ public class VerifyPhoneNumberActivity extends BaseActivity {
         accountInfo.put("phoneNumber", phoneNumber);
         accountInfo.put("userId", id);
 
-        commandCenterRef.document(uid).set(accountInfo);
+        commandCenterRef.document(uid).set(accountInfo).addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
 
-        Intent intent1 = new Intent(VerifyPhoneNumberActivity.this, MainActivity.class);
-        intent1.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
-        intent1.putExtra(AppConstants.UID, id);
-        intent1.putExtra(AppConstants.USER_NAME, userName);
-        intent1.putExtra(AppConstants.USER_PHOTO_URL, imageUrl);
-        startActivity(intent1);
-        this.finishAffinity();
+                Intent intent = new Intent(VerifyPhoneNumberActivity.this, MainActivity.class);
+               /* intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
+                intent.putExtra(AppConstants.UID, id);
+                intent.putExtra(AppConstants.USER_NAME, userName);
+                intent.putExtra(AppConstants.USER_PHOTO_URL, imageUrl);*/
+                startActivity(intent);
+                this.finishAffinity();
+
+                Log.i(TAG, "onCreate: " + userName + userPhotoUrl + uid + phoneNumber);
+
+            } else {
+                DisplayViewUI.displayToast(VerifyPhoneNumberActivity.this, Objects.requireNonNull(task.getException()).getMessage());
+            }
+
+        });
+
+
     }
 
     public void wrongNumber(View view) {

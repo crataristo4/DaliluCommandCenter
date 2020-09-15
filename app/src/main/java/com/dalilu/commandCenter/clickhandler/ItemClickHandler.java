@@ -80,6 +80,7 @@ public class ItemClickHandler {
             verifyNumberIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             context.startActivity(verifyNumberIntent);
 
+
         } else if (phoneNumber.length() < 9) {
             pbLoading.setVisibility(View.GONE);
             txtPhoneNumber.setErrorEnabled(true);

@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String KEY = "key";
-    private static final int INITIAL_LOAD = 15;
+    private static final int INITIAL_LOAD = 50;
     /**
      * Time when the location was updated represented as a String.
      */
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements
 
         // Check that the user hasn't revoked permissions by going to Settings.
         if (Utils.requestingLocationUpdates(this)) {
-            if (!checkPermissions()) {
+            if (checkPermissions()) {
                 requestPermissions();
             }
         }
@@ -128,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements
             userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
             userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
             phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
+
+            Log.i(TAG, "onCreate: " + userName + userPhotoUrl + userId + phoneNumber);
 
         }
 
@@ -235,13 +237,13 @@ public class MainActivity extends AppCompatActivity implements
     void myIntent() {
 
         Intent intent = new Intent(this, ReportActivity.class);
-        intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
+      /*  intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
         intent.putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl);
         intent.putExtra(AppConstants.USER_NAME, userName);
-        intent.putExtra(AppConstants.UID, userId);
+        intent.putExtra(AppConstants.UID, userId);*/
 
         startActivity(intent);
-        finish();
+        //  finish();
 
 
     }
@@ -256,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.reportMenu) {
-            if (!checkPermissions()) {
+            if (checkPermissions()) {
                 requestPermissions();
             } else {
                 mService.requestLocationUpdates();
@@ -301,7 +303,7 @@ public class MainActivity extends AppCompatActivity implements
         setButtonsState(Utils.requestingLocationUpdates(this));
 
 
-        if (!checkPermissions()) {
+        if (checkPermissions()) {
             requestPermissions();
         } else {
 //            mService.requestLocationUpdates();
@@ -391,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements
      * Returns the current state of the permissions needed.
      */
     private boolean checkPermissions() {
-        return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(this,
+        return PackageManager.PERMISSION_GRANTED != ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
@@ -493,11 +495,7 @@ public class MainActivity extends AppCompatActivity implements
         public void onReceive(Context context, Intent intent) {
             Location location = intent.getParcelableExtra(LocationUpdatesService.EXTRA_LOCATION);
             if (location != null) {
-                runOnUiThread(() -> {
-
-                    getAddress(location);
-
-                });
+                runOnUiThread(() -> getAddress(location));
                /* Toast.makeText(MainActivity.this, Utils.getLocationText(location),
                         Toast.LENGTH_SHORT).show();*/
             }

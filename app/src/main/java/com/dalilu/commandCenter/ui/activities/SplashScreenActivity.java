@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.auth.RegisterPhoneNumberActivity;
 import com.dalilu.commandCenter.databinding.ActivitySplashScreenBinding;
-import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -30,6 +29,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     private String uid, phoneNumber, userName, userPhotoUrl;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
+    private static final String TAG = "SplashScreenActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,59 +61,67 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         new Handler().postDelayed(() -> {
 
-            if (firebaseUser != null) {
+            runOnUiThread(() -> {
 
-                uid = firebaseUser.getUid();
-                phoneNumber = firebaseUser.getPhoneNumber();
+                if (firebaseUser != null) {
 
-                usersCollectionRef = FirebaseFirestore.getInstance().collection("Command Center");
+                    uid = firebaseUser.getUid();
+                    phoneNumber = firebaseUser.getPhoneNumber();
 
-                usersCollectionRef.get().addOnCompleteListener(task -> {
+                    usersCollectionRef = FirebaseFirestore.getInstance().collection("Command Center");
 
-                    if (task.isSuccessful()) {
-                        if (!task.getResult().getDocuments().isEmpty()) {
-                            DocumentReference usersDocDbRef = usersCollectionRef.document(uid);
+                    usersCollectionRef.get().addOnCompleteListener(task -> {
 
-                            usersDocDbRef.get().addOnCompleteListener(task1 -> {
+                        if (task.isSuccessful()) {
+                            if (!task.getResult().getDocuments().isEmpty()) {
+                                DocumentReference usersDocDbRef = usersCollectionRef.document(uid);
 
-                                if (task1.isSuccessful()) {
-                                    DocumentSnapshot document = task1.getResult();
-                                    if (document != null && document.exists()) {
+                                usersDocDbRef.get().addOnCompleteListener(task1 -> {
 
-                                        userPhotoUrl = Objects.requireNonNull(document.getString("userPhotoUrl"));
-                                        userName = Objects.requireNonNull(document.getString("userName"));
-                                        phoneNumber = Objects.requireNonNull(document.getString("phoneNumber"));
+                                    if (task1.isSuccessful()) {
+                                        DocumentSnapshot document = task1.getResult();
+                                        if (document != null && document.exists()) {
+/*
+                                            userPhotoUrl = Objects.requireNonNull(document.getString("userPhotoUrl"));
+                                            userName = Objects.requireNonNull(document.getString("userName"));
+                                            phoneNumber = Objects.requireNonNull(document.getString("phoneNumber"));
 
-                                        intent.putExtra(AppConstants.UID, uid);
-                                        intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
-                                        intent.putExtra(AppConstants.USER_NAME, userName);
-                                        intent.putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl);
+                                            intent.putExtra(AppConstants.UID, uid);
+                                            intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
+                                            intent.putExtra(AppConstants.USER_NAME, userName);
+                                            intent.putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl);
+
+                                            Log.i(TAG, "onCreate: " + userName + userPhotoUrl + uid + phoneNumber);*/
+
+                                            startActivity(intent);
+                                            SplashScreenActivity.this.finishAffinity();
+
+
+                                        }
+
+
+                                    } else {
+
+                                        DisplayViewUI.displayToast(SplashScreenActivity.this, Objects.requireNonNull(task1.getException()).getMessage());
 
                                     }
 
-                                    startActivity(intent);
-                                    SplashScreenActivity.this.finishAffinity();
-
-                                } else {
-
-                                    DisplayViewUI.displayToast(SplashScreenActivity.this, Objects.requireNonNull(task1.getException()).getMessage());
-
-                                }
-
-                            });
+                                });
 
 
+                            }
                         }
-                    }
 
-                });
+                    });
 
 
-            } else {
-                //Opens the Phone Auth Activity once the time elapses
-                startActivity(new Intent(SplashScreenActivity.this, RegisterPhoneNumberActivity.class));
-                finish();
-            }
+                } else {
+                    //Opens the Phone Auth Activity once the time elapses
+                    startActivity(new Intent(SplashScreenActivity.this, RegisterPhoneNumberActivity.class));
+                    finish();
+                }
+            });
+
 
         }, 3000);
     }

@@ -29,6 +29,8 @@ import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.CameraUtils;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -63,6 +65,9 @@ public class ReportActivity extends BaseActivity {
     private Uri uri = null;
     private ProgressDialog pd;
     private CollectionReference alertCollectionReference;
+    private static String uid;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
     private String knownName, address, state, country, phoneNumber, userId, userName, userPhotoUrl;
     private double latitude, longitude;
     private ImageView imgPhoto;
@@ -80,6 +85,48 @@ public class ReportActivity extends BaseActivity {
         activityReportBinding = DataBindingUtil.setContentView(this, R.layout.activity_report);
         setSupportActionBar(activityReportBinding.toolBarReport);
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null) {
+
+            userId = firebaseUser.getUid();
+            phoneNumber = firebaseUser.getPhoneNumber();
+            userPhotoUrl = "https://firebasestorage.googleapis.com/v0/b/dalilu-app.appspot.com/o/command%20center%2Fcc.jpg?alt=media&token=cc2872f4-7423-4198-a8f6-7884ce7c0064";
+            userName = "Command Center";
+
+            Log.i(TAG, "onCreate: " + userName + userPhotoUrl + userId + phoneNumber);
+
+            //get location details from Main activity
+            address = MainActivity.address;
+            state = MainActivity.state;
+            country = MainActivity.country;
+            knownName = MainActivity.knownName;
+            latitude = MainActivity.latitude;
+            longitude = MainActivity.longitude;
+
+            Log.i("onCreate: ", "tags from Main::" + state + " " + country + " " + knownName);
+
+
+            // if location details from Main is not found try again and get details from Base
+            if (address == null && state == null && country == null && knownName == null) {
+
+                address = BaseActivity.address;
+                state = BaseActivity.state;
+                country = BaseActivity.country;
+                knownName = BaseActivity.knownName;
+
+                latitude = BaseActivity.latitude;
+                longitude = BaseActivity.longitude;
+                Log.i("onCreate: ", "Tags from Base-- " + longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
+
+
+            }
+
+
+        }
+/*
+
         Intent getUserDetailsIntent = getIntent();
         if (getUserDetailsIntent != null) {
             userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
@@ -88,19 +135,14 @@ public class ReportActivity extends BaseActivity {
             phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
 
 
-            address = MainActivity.address;
-            state = MainActivity.state;
-            country = MainActivity.country;
-            knownName = MainActivity.knownName;
-            latitude = MainActivity.latitude;
-            longitude = MainActivity.longitude;
 
-            //   Log.i("onCreate: ","tags::" + BaseActivity.state + " " + BaseActivity.country + " " + BaseActivity.knownName);
-            Log.i("onCreate: ", longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
+
+
+
 
         }
+*/
 
-        // updateAddress();
 
         StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("alerts");
         filePath = imageStorageRef.child(UUID.randomUUID().toString());
@@ -365,11 +407,11 @@ public class ReportActivity extends BaseActivity {
                             pd.dismiss();
                             DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
-                            startActivity(new Intent(ReportActivity.this, MainActivity.class)
+                          /*  startActivity(new Intent(ReportActivity.this, MainActivity.class)
                                     .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
                                     .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
                                     .putExtra(AppConstants.USER_NAME, userName)
-                                    .putExtra(AppConstants.UID, userId));
+                                    .putExtra(AppConstants.UID, userId));*/
                             finish();
 
 
@@ -442,11 +484,14 @@ public class ReportActivity extends BaseActivity {
                 previewVideo();
 
                 btnUpload.setOnClickListener(view -> {
-                        //upload to server
-                        try {
-                            uploadToServer(uri, "video");
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                    //display loading
+                    pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingVideo));
+
+                    //upload to server
+                    try {
+                        uploadToServer(uri, "video");
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
                 });
 
@@ -540,10 +585,8 @@ public class ReportActivity extends BaseActivity {
         imageStoragePath = savedInstanceState.getString(KEY_IMAGE_STORAGE_PATH);
     }
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
     }
-
 }
