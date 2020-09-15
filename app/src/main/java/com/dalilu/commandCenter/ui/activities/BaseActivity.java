@@ -35,7 +35,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -92,8 +91,6 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -109,9 +106,14 @@ public class BaseActivity extends AppCompatActivity {
             mSettingsClient = LocationServices.getSettingsClient(this);
             geocoder = new Geocoder(this, Locale.getDefault());
 
-            createLocationCallback();
-            createLocationRequest();
-            requestPermissions();
+
+            if (checkPermissions()) {
+                createLocationCallback();
+                createLocationRequest();
+            }
+
+
+            // requestPermissions();
 
         });
 
@@ -278,9 +280,7 @@ public class BaseActivity extends AppCompatActivity {
         int permissionState = 0;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
             permissionState = ActivityCompat.checkSelfPermission(this,
-                    Arrays.toString(new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                            Manifest.permission.ACCESS_COARSE_LOCATION,
-                            Manifest.permission.ACCESS_BACKGROUND_LOCATION}));
+                    Manifest.permission.ACCESS_FINE_LOCATION);
         }
         return permissionState == PackageManager.PERMISSION_GRANTED;
     }
@@ -362,11 +362,25 @@ public class BaseActivity extends AppCompatActivity {
                 });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        /*if (!checkPermissions()) {
+            requestPermissions();
+        } else {
+            buildLocationSettingsRequest();
+            startLocationUpdates();
+        }*/
+
+
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (checkPermissions()) {
+        if (!checkPermissions()) {
+            requestPermissions();
+        } else {
             buildLocationSettingsRequest();
             startLocationUpdates();
         }

@@ -14,14 +14,14 @@
     <string name="comments">Commentaires</string>
     <string name="vidRecCanceled">Enregistrement de la video annullee</string>
     <string name="sorryVidFailed">Desole! Echec d\'enregistrer la video</string>
-    <string name="title_activity_maps">Carte</string>
+    <string name="title_activity_maps">Voir sur la carte</string>
     <string name="reportSuccess">Information transmis avec succes</string>
     <string name="next">Suivant</string>
     <string name="phoneNumber">Numero de Telephone</string>
     <string name="verify">Verifier</string>
     <string name="noInternet">Aucune connexion internet n\'est necessaire. Contactez votre fournisseur de service si le probleme persiste</string>
     <string name="phoneReq">Numero de telephone obligatoire</string>
-    <string name="permission_rationale">Autorisation de localisation est obligatoire pour reperer l\'activite sur la carte</string>
+    <string name="permission_rationale">Les autorisations de localisation sont une condition de base pour utiliser cette application. Veuillez l\'activer ou bien          vous ne pourrez peut-être pas l\'utiliser !!!</string>
     <string name="successFull">Succes</string>
     <string name="grantPerm">Autorisation accordee</string>
     <string name="ok">OK</string>

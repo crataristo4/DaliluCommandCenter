@@ -15,7 +15,7 @@
     <string name="reportSuccess">report successful</string>
     <string name="vidRecCanceled">video recording cancelled</string>
     <string name="sorryVidFailed">Sorry! Failed to record video</string>
-    <string name="title_activity_maps">Map Mode</string>
+    <string name="title_activity_maps">View on map</string>
     <string name="next">Next</string>
     <string name="phoneNumber">Phone Number</string>
     <string name="verify">Verify</string>
@@ -23,8 +23,8 @@
 
     <!--location-->
 
-    <string name="permission_rationale">Location permissions are required to locate activities on map
-    </string>
+    <string name="permission_rationale">Location permissions is a basic requirement to use this application.Please enable it or else
+         you might not be able to use it!!!</string>
 
     <string name="successFull">Successful</string>
     <string name="grantPerm">Grant permission</string>

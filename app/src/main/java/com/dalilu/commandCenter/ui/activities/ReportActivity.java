@@ -134,12 +134,6 @@ public class ReportActivity extends BaseActivity {
             userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
             phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
 
-
-
-
-
-
-
         }
 */
 
@@ -184,9 +178,6 @@ public class ReportActivity extends BaseActivity {
 
 
     }
-
-
-
 
     /**
      * Capturing Camera Image will launch camera app requested image capture
@@ -588,5 +579,12 @@ public class ReportActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.i("onResume: ", "Tags from onResume-- " + longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
+
     }
 }

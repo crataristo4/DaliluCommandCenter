@@ -23,7 +23,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
@@ -52,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity implements
+public class MainActivity extends BaseActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String KEY = "key";
@@ -120,17 +119,6 @@ public class MainActivity extends AppCompatActivity implements
             if (checkPermissions()) {
                 requestPermissions();
             }
-        }
-
-        Intent getUserDetailsIntent = getIntent();
-        if (getUserDetailsIntent != null) {
-            userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
-            userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
-            userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
-            phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
-
-            Log.i(TAG, "onCreate: " + userName + userPhotoUrl + userId + phoneNumber);
-
         }
 
         alertsCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
@@ -237,11 +225,6 @@ public class MainActivity extends AppCompatActivity implements
     void myIntent() {
 
         Intent intent = new Intent(this, ReportActivity.class);
-      /*  intent.putExtra(AppConstants.PHONE_NUMBER, phoneNumber);
-        intent.putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl);
-        intent.putExtra(AppConstants.USER_NAME, userName);
-        intent.putExtra(AppConstants.UID, userId);*/
-
         startActivity(intent);
         //  finish();
 
@@ -377,7 +360,10 @@ public class MainActivity extends AppCompatActivity implements
                 // receive empty arrays.
                 Log.i(TAG, "User interaction was cancelled.");
             } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mService.requestLocationUpdates();
+                if (mService.serviceIsStarted(this)) {
+                    mService.requestLocationUpdates();
+
+                }
 
             } else {
 

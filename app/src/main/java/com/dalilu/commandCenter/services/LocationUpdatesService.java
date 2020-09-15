@@ -20,6 +20,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
@@ -78,6 +79,7 @@ public class LocationUpdatesService extends Service {
     private static final int NOTIFICATION_ID = 12345678;
     public static Geocoder geocoder;
     public static String address, knownName, state, country;
+    public static double lat, lng;
     private final IBinder mBinder = new LocalBinder();
     /**
      * Used to check whether the bound activity has really gone away and not unbound as part of an
@@ -296,6 +298,10 @@ public class LocationUpdatesService extends Service {
         Log.i(TAG, "New location: " + location);
 
         mLocation = location;
+
+        lat = location.getLatitude();
+        lng = location.getLongitude();
+
         getLocation(location);
 
         // Notify anyone listening for broadcasts about the new location.
@@ -310,30 +316,39 @@ public class LocationUpdatesService extends Service {
     }
 
 
-    void getLocation(Location mLocation) {
-        try {
-            List<Address> addressList = geocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
+    void getLocation(@NonNull Location mLocation) {
 
-            if (addressList != null) {
-                String address = addressList.get(0).getAddressLine(0);
-                state = addressList.get(0).getAdminArea();
-                country = addressList.get(0).getCountryName();
-                knownName = addressList.get(0).getFeatureName();
+        if (serviceIsStarted(this)) {
+            try {
+                List<Address> addressList = geocoder.getFromLocation(mLocation.getLatitude(), mLocation.getLongitude(), 1);
 
-                Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lat",
-                        mLocation.getLatitude()));
-                Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lng",
-                        mLocation.getLongitude()));
-                Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
-                        "Known Name", knownName));
+                if (addressList != null) {
+                    address = addressList.get(0).getAddressLine(0);
+                    state = addressList.get(0).getAdminArea();
+                    country = addressList.get(0).getCountryName();
+                    knownName = addressList.get(0).getFeatureName();
+
+                    Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lat",
+                            mLocation.getLatitude()));
+                    Log.i(TAG, String.format(Locale.ENGLISH, "%s: %f", "lng",
+                            mLocation.getLongitude()));
+                    Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                            "Known Name", knownName));
+                    Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                            "Latitude", mLocation.getLatitude()));
+                    Log.i(TAG, String.format(Locale.ENGLISH, "%s: %s",
+                            "Longitude", mLocation.getLongitude()));
 
 
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
+
     }
 
     /**
@@ -358,6 +373,21 @@ public class LocationUpdatesService extends Service {
                 Integer.MAX_VALUE)) {
             if (getClass().getName().equals(service.service.getClassName())) {
                 if (service.foreground) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    public boolean serviceIsStarted(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(
+                Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
+                Integer.MAX_VALUE)) {
+            if (getClass().getName().equals(service.service.getClassName())) {
+                if (service.started) {
                     return true;
                 }
             }
