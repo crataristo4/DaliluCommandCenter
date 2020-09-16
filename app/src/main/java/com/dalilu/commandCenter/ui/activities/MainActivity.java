@@ -228,7 +228,6 @@ public class MainActivity extends BaseActivity implements
         startActivity(intent);
         //  finish();
 
-
     }
 
 
@@ -255,8 +254,8 @@ public class MainActivity extends BaseActivity implements
                     Context.BIND_AUTO_CREATE);
 
 
-            DisplayViewUI.displayAlertDialogMsg(this, "Make a report", "Are you sure you want to make a report?",
-                    "No", "Yes", (dialogInterface, i) -> {
+            DisplayViewUI.displayAlertDialogMsg(this, getString(R.string.mkRpt), getString(R.string.sure),
+                    getString(R.string.no), getString(R.string.yes), (dialogInterface, i) -> {
 
                         if (i == -2) {
                             dialogInterface.dismiss();
@@ -267,7 +266,7 @@ public class MainActivity extends BaseActivity implements
                                 loading.dismiss();
                                 myIntent();
 
-                            }, 3000);
+                            }, 1500);
                         }
                     });
 

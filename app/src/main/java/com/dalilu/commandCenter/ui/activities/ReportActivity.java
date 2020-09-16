@@ -25,6 +25,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityReportBinding;
+import com.dalilu.commandCenter.services.LocationUpdatesService;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.CameraUtils;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
@@ -97,31 +98,46 @@ public class ReportActivity extends BaseActivity {
 
             Log.i(TAG, "onCreate: " + userName + userPhotoUrl + userId + phoneNumber);
 
-            //get location details from Main activity
-            address = MainActivity.address;
-            state = MainActivity.state;
-            country = MainActivity.country;
-            knownName = MainActivity.knownName;
-            latitude = MainActivity.latitude;
-            longitude = MainActivity.longitude;
+            runOnUiThread(() -> {
 
-            Log.i("onCreate: ", "tags from Main::" + state + " " + country + " " + knownName);
+                //get location details from Main activity
+                address = MainActivity.address;
+                state = MainActivity.state;
+                country = MainActivity.country;
+                knownName = MainActivity.knownName;
+                latitude = MainActivity.latitude;
+                longitude = MainActivity.longitude;
+
+                Log.i("onCreate: ", "tags from Main::" + state + " " + country + " " + knownName);
+
+                // if location details from Main is not found try again and get details from Base
+                if (address == null && state == null && country == null && knownName == null) {
+
+                    address = BaseActivity.address;
+                    state = BaseActivity.state;
+                    country = BaseActivity.country;
+                    knownName = BaseActivity.knownName;
+
+                    latitude = BaseActivity.latitude;
+                    longitude = BaseActivity.longitude;
+                    Log.i("onCreate: ", "Tags from Base-- " + longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
 
 
-            // if location details from Main is not found try again and get details from Base
-            if (address == null && state == null && country == null && knownName == null) {
+                } else {
+                    //fetch from location service
+                    address = LocationUpdatesService.address;
+                    state = LocationUpdatesService.state;
+                    country = LocationUpdatesService.country;
+                    knownName = LocationUpdatesService.knownName;
 
-                address = BaseActivity.address;
-                state = BaseActivity.state;
-                country = BaseActivity.country;
-                knownName = BaseActivity.knownName;
-
-                latitude = BaseActivity.latitude;
-                longitude = BaseActivity.longitude;
-                Log.i("onCreate: ", "Tags from Base-- " + longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
+                    latitude = LocationUpdatesService.lat;
+                    longitude = LocationUpdatesService.lng;
+                    Log.i("onCreate: ", "Tags from Location updates-- " + longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
 
 
-            }
+                }
+
+            });
 
 
         }
@@ -293,86 +309,46 @@ public class ReportActivity extends BaseActivity {
     }
 
     private void uploadToServer(Uri imageUri, String type) throws IOException {
-        pd.show();
-        StringBuilder addressBuilder = new StringBuilder();
-        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
-        String dateReported = dateFormat.format(Calendar.getInstance().getTime());
+
+        if (address == null && state == null && country == null && knownName == null && latitude == 0.0 && longitude == 0.0) {
+
+            DisplayViewUI.displayAlertDialog(this,
+                    "Error",
+                    "Please try again later, can not get location details",
+                    getString(R.string.ok),
+                    (dialogInterface, i) -> dialogInterface.dismiss());
 
 
-        addressBuilder.append(knownName).append(",").append(state).append(",").append(country);
+        } else {
+            pd.show();
+            StringBuilder addressBuilder = new StringBuilder();
+            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
+            String dateReported = dateFormat.format(Calendar.getInstance().getTime());
 
+            addressBuilder.append(knownName).append(",").append(state).append(",").append(country);
 
-        if (type.equals("image")) {
+            if (type.equals("image")) {
 
-            //compress image
-            Bitmap bitmap;
-            bitmap = getBitmap(getContentResolver(), imageUri);
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
+                //compress image
+                Bitmap bitmap;
+                bitmap = getBitmap(getContentResolver(), imageUri);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 10, byteArrayOutputStream);
 
-            byte[] fileInBytes = byteArrayOutputStream.toByteArray();
-            //upload photo to server
-            filePath.putBytes(fileInBytes).continueWithTask(task -> {
+                byte[] fileInBytes = byteArrayOutputStream.toByteArray();
+                //upload photo to server
+                filePath.putBytes(fileInBytes).continueWithTask(task -> {
 
-                if (!task.isSuccessful()) {
+                    if (!task.isSuccessful()) {
+                        pd.dismiss();
+
+                    }
+                    return filePath.getDownloadUrl();
+
+                }).addOnSuccessListener(this, o -> {
                     pd.dismiss();
 
-                }
-                return filePath.getDownloadUrl();
-
-            }).addOnSuccessListener(this, o -> {
-                pd.dismiss();
-
-                Uri downLoadUri = Uri.parse(o.toString());
-                assert downLoadUri != null;
-                String url = downLoadUri.toString();
-
-                Map<String, Object> alertItems = new HashMap<>();
-                alertItems.put("userName", userName);
-                alertItems.put("userPhotoUrl", userPhotoUrl);
-                alertItems.put("url", url);
-                alertItems.put(type, type);
-                alertItems.put("coordinates", new GeoPoint(latitude, longitude));
-                alertItems.put("address", addressBuilder.toString());
-                alertItems.put("userId", userId);
-                alertItems.put("phoneNumber", phoneNumber);
-                alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
-                alertItems.put("dateReported", dateReported);
-                alertItems.put("isSolved", false);
-
-
-                alertCollectionReference.add(alertItems);
-                String id = MainActivity.userId;
-                Log.i(TAG, "uploadToServer: " + addressBuilder.toString());
-
-                startActivity(new Intent(ReportActivity.this, MainActivity.class)
-                        .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
-                        .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
-                        .putExtra(AppConstants.USER_NAME, userName)
-                        .putExtra(AppConstants.UID, userId));
-                finish();
-
-
-            }).addOnFailureListener(this, e -> {
-                pd.dismiss();
-                DisplayViewUI.displayToast(this, Objects.requireNonNull(e.getMessage()));
-
-            });
-
-
-        } else if (type.equals("video")) {
-            filePath.putFile(imageUri).continueWithTask(task -> {
-                if (!task.isSuccessful()) {
-                    pd.dismiss();
-
-                }
-
-                return filePath.getDownloadUrl();
-
-            }).addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-
-                    Uri downLoadUri = task.getResult();
+                    Uri downLoadUri = Uri.parse(o.toString());
                     assert downLoadUri != null;
                     String url = downLoadUri.toString();
 
@@ -390,41 +366,90 @@ public class ReportActivity extends BaseActivity {
                     alertItems.put("isSolved", false);
 
 
-                    //fire store cloud store
-                    alertCollectionReference.add(alertItems).addOnCompleteListener(task2 -> {
+                    alertCollectionReference.add(alertItems);
+                    String id = MainActivity.userId;
+                    Log.i(TAG, "uploadToServer: " + addressBuilder.toString());
 
-                        if (task2.isSuccessful()) {
+                    startActivity(new Intent(ReportActivity.this, MainActivity.class)
+                            .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
+                            .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
+                            .putExtra(AppConstants.USER_NAME, userName)
+                            .putExtra(AppConstants.UID, userId));
+                    finish();
 
-                            pd.dismiss();
-                            DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
+
+                }).addOnFailureListener(this, e -> {
+                    pd.dismiss();
+                    DisplayViewUI.displayToast(this, Objects.requireNonNull(e.getMessage()));
+
+                });
+
+
+            } else if (type.equals("video")) {
+                filePath.putFile(imageUri).continueWithTask(task -> {
+                    if (!task.isSuccessful()) {
+                        pd.dismiss();
+
+                    }
+
+                    return filePath.getDownloadUrl();
+
+                }).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+
+                        Uri downLoadUri = task.getResult();
+                        assert downLoadUri != null;
+                        String url = downLoadUri.toString();
+
+                        Map<String, Object> alertItems = new HashMap<>();
+                        alertItems.put("userName", userName);
+                        alertItems.put("userPhotoUrl", userPhotoUrl);
+                        alertItems.put("url", url);
+                        alertItems.put(type, type);
+                        alertItems.put("coordinates", new GeoPoint(latitude, longitude));
+                        alertItems.put("address", addressBuilder.toString());
+                        alertItems.put("userId", userId);
+                        alertItems.put("phoneNumber", phoneNumber);
+                        alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
+                        alertItems.put("dateReported", dateReported);
+                        alertItems.put("isSolved", false);
+
+
+                        //fire store cloud store
+                        alertCollectionReference.add(alertItems).addOnCompleteListener(task2 -> {
+
+                            if (task2.isSuccessful()) {
+
+                                pd.dismiss();
+                                DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
                           /*  startActivity(new Intent(ReportActivity.this, MainActivity.class)
                                     .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
                                     .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
                                     .putExtra(AppConstants.USER_NAME, userName)
                                     .putExtra(AppConstants.UID, userId));*/
-                            finish();
+                                finish();
 
 
-                        } else {
-                            pd.dismiss();
-                            DisplayViewUI.displayToast(this, Objects.requireNonNull(task2.getException()).getMessage());
+                            } else {
+                                pd.dismiss();
+                                DisplayViewUI.displayToast(this, Objects.requireNonNull(task2.getException()).getMessage());
 
-                        }
+                            }
 
-                    });
+                        });
 
-                } else {
-                    pd.dismiss();
-                    DisplayViewUI.displayToast(ReportActivity.this, Objects.requireNonNull(task.getException()).getMessage());
+                    } else {
+                        pd.dismiss();
+                        DisplayViewUI.displayToast(ReportActivity.this, Objects.requireNonNull(task.getException()).getMessage());
 
-                }
+                    }
 
-            });
+                });
+
+            }
 
         }
-
-
     }
 
     @Override
@@ -445,12 +470,12 @@ public class ReportActivity extends BaseActivity {
                     //display loading
                     pd = DisplayViewUI.displayProgress(ReportActivity.this, getString(R.string.uploadingImage));
 
-                        //upload to server
-                        try {
-                            uploadToServer(uri, "image");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                    //upload to server
+                    try {
+                        uploadToServer(uri, "image");
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 });
 
@@ -527,7 +552,7 @@ public class ReportActivity extends BaseActivity {
             videoView.setVisibility(View.VISIBLE);
             imgPhoto.setVisibility(View.GONE);
             videoView.setVideoPath(imageStoragePath);
-           // videoView.start();
+            // videoView.start();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -585,6 +610,17 @@ public class ReportActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
         Log.i("onResume: ", "Tags from onResume-- " + longitude + " ... " + latitude + "tags::--" + knownName + " " + country + " " + state);
+        Log.i("onResume: ", "Tags from Location updates-- " + LocationUpdatesService.lat + " ... " + LocationUpdatesService.lng + "tags::--" + LocationUpdatesService.knownName + " " + LocationUpdatesService.country + " " + LocationUpdatesService.state);
 
+        if (address == null && state == null && country == null && knownName == null) {
+            //fetch from location service
+            address = LocationUpdatesService.address;
+            state = LocationUpdatesService.state;
+            country = LocationUpdatesService.country;
+            knownName = LocationUpdatesService.knownName;
+
+            latitude = LocationUpdatesService.lat;
+            longitude = LocationUpdatesService.lng;
+        }
     }
 }

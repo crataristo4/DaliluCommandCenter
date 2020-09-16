@@ -31,7 +31,7 @@ public final class AppConstants {
     /**
      * The desired interval for location updates. Inexact. Updates may be more or less frequent.
      */
-    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 10000;
+    public static final long UPDATE_INTERVAL_IN_MILLISECONDS = 500;
 
     /**
      * The fastest rate for active location updates. Exact. Updates will never be more frequent
