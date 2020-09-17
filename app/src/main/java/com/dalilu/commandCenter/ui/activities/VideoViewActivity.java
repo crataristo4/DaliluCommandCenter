@@ -1,5 +1,6 @@
 package com.dalilu.commandCenter.ui.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -8,6 +9,7 @@ import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -15,11 +17,16 @@ import com.dalilu.commandCenter.Dalilu;
 import com.dalilu.commandCenter.R;
 import com.dalilu.commandCenter.databinding.ActivityVideoViewBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
+import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.danikula.videocache.HttpProxyCacheServer;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Objects;
 
 public class VideoViewActivity extends AppCompatActivity {
+    String objectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +34,9 @@ public class VideoViewActivity extends AppCompatActivity {
         ActivityVideoViewBinding activityVideoViewBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_view);
         Intent getVideoIntent = getIntent();
         VideoView videoView = activityVideoViewBinding.videoContentPreview;
+        CollectionReference collectionReference = FirebaseFirestore
+                .getInstance()
+                .collection("Alerts");
 
         runOnUiThread(() -> {
             if (getVideoIntent != null) {
@@ -57,10 +67,47 @@ public class VideoViewActivity extends AppCompatActivity {
                 activityVideoViewBinding.txtLocation.setText(getVideoIntent.getStringExtra(AppConstants.KNOWN_LOCATION));
                 activityVideoViewBinding.txtPostedBy.setText(java.text.MessageFormat.format("Posted by: {0}", getVideoIntent.getStringExtra(AppConstants.USER_NAME)));
 
+                objectId = getVideoIntent.getStringExtra(AppConstants.UID);
 
             }
         });
 
+        activityVideoViewBinding.btnDelete.setOnClickListener(view -> DisplayViewUI.displayAlertDialogDelete(
+                this,
+                getString(R.string.rmRpt),
+                getString(R.string.thisRpt),
+                getString(R.string.no),
+                getString(R.string.yes),
+                (dialogInterface, i) -> {
+                    switch (i) {
+                        case -2:
+                            dialogInterface.dismiss();
+                            break;
+                        case -1:
+                            //delete item
+                            collectionReference.document(objectId).delete()
+                                    .addOnCompleteListener(VideoViewActivity.this, this::onComplete);
 
+                            break;
+                    }
+                }
+        ));
+
+
+    }
+
+    private void onComplete(@NonNull Task<Void> task) {
+        ProgressDialog loading = DisplayViewUI.displayProgress(this, getString(R.string.plsRpt));
+        loading.show();
+
+        if (task.isSuccessful()) {
+            loading.dismiss();
+            DisplayViewUI.displayToast(VideoViewActivity.this, getString(R.string.rptDel));
+
+            finish();
+        } else {
+            loading.dismiss();
+            DisplayViewUI.displayToast(VideoViewActivity.this, Objects.requireNonNull(task.getException()).getMessage());
+        }
     }
 }

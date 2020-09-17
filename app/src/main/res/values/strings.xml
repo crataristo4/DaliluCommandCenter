@@ -91,5 +91,10 @@
     <string name="sure">Are you sure you want to make a report?</string>
     <string name="no">No</string>
     <string name="yes">yes</string>
+    <string name="delete">Delete</string>
+    <string name="rmRpt">Remove report</string>
+    <string name="thisRpt">This report will be permanently removed and you cannot see it again.Are you sure you want to delete it?</string>
+    <string name="rptDel">Report has been deleted</string>
+    <string name="plsRpt">please wait , report is deleting</string>
 
 </resources>

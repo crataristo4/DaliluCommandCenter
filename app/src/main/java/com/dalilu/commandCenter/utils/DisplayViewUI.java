@@ -85,6 +85,18 @@ public class DisplayViewUI {
         builder.show();
     }
 
+    static public void displayAlertDialogDelete(Context context, String title, String msg, String btnNeg, String btnPos, DialogInterface.OnClickListener onClickListener) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.setCancelable(false);
+        // builder.setNegativeButtonIcon(ContextCompat.getDrawable(context,R.drawable.ic_baseline_cancel_24));
+        if (btnNeg != null) builder.setNegativeButton(btnNeg, onClickListener);
+        if (btnPos != null) builder.setPositiveButton(btnPos, onClickListener);
+        builder.setIcon(ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_forever));
+        builder.show();
+    }
+
     static public boolean isNetworkConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) Objects.requireNonNull(context).getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = Objects.requireNonNull(connectivityManager).getActiveNetworkInfo();
