@@ -20,9 +20,8 @@ import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.MessageFormat;
 import java.util.Objects;
 
 public class VideoViewActivity extends AppCompatActivity {
@@ -34,9 +33,6 @@ public class VideoViewActivity extends AppCompatActivity {
         ActivityVideoViewBinding activityVideoViewBinding = DataBindingUtil.setContentView(this, R.layout.activity_video_view);
         Intent getVideoIntent = getIntent();
         VideoView videoView = activityVideoViewBinding.videoContentPreview;
-        CollectionReference collectionReference = FirebaseFirestore
-                .getInstance()
-                .collection("Alerts");
 
         runOnUiThread(() -> {
             if (getVideoIntent != null) {
@@ -65,7 +61,7 @@ public class VideoViewActivity extends AppCompatActivity {
                 }
                 activityVideoViewBinding.txtDate.setText(getVideoIntent.getStringExtra(AppConstants.TIME_STAMP));
                 activityVideoViewBinding.txtLocation.setText(getVideoIntent.getStringExtra(AppConstants.KNOWN_LOCATION));
-                activityVideoViewBinding.txtPostedBy.setText(java.text.MessageFormat.format("Posted by: {0}", getVideoIntent.getStringExtra(AppConstants.USER_NAME)));
+                activityVideoViewBinding.txtPostedBy.setText(MessageFormat.format(getString(R.string.pstBBY), getVideoIntent.getStringExtra(AppConstants.USER_NAME)));
 
                 objectId = getVideoIntent.getStringExtra(AppConstants.UID);
 
@@ -85,8 +81,24 @@ public class VideoViewActivity extends AppCompatActivity {
                             break;
                         case -1:
                             //delete item
-                            collectionReference.document(objectId).delete()
-                                    .addOnCompleteListener(VideoViewActivity.this, this::onComplete);
+                            ProgressDialog loading = DisplayViewUI.displayProgress(VideoViewActivity.this, getString(R.string.plsRpt));
+                            loading.show();
+
+                            ReportActivity.alertCollectionReference.document(objectId)
+                                    .delete()
+                                    .addOnCompleteListener(VideoViewActivity.this, task -> {
+                                        if (task.isSuccessful()) {
+                                            loading.dismiss();
+                                            DisplayViewUI.displayToast(VideoViewActivity.this, getString(R.string.rptDel));
+
+                                            gotoMain();
+                                        } else {
+                                            loading.dismiss();
+                                            DisplayViewUI.displayToast(VideoViewActivity.this, Objects.requireNonNull(task.getException()).getMessage());
+                                        }
+
+
+                                    });
 
                             break;
                     }
@@ -104,10 +116,20 @@ public class VideoViewActivity extends AppCompatActivity {
             loading.dismiss();
             DisplayViewUI.displayToast(VideoViewActivity.this, getString(R.string.rptDel));
 
-            finish();
+            gotoMain();
         } else {
             loading.dismiss();
             DisplayViewUI.displayToast(VideoViewActivity.this, Objects.requireNonNull(task.getException()).getMessage());
         }
+    }
+
+    void gotoMain() {
+        startActivity(new Intent(this, MainActivity.class));
+        finishAffinity();
+    }
+
+    @Override
+    public void onBackPressed() {
+        gotoMain();
     }
 }

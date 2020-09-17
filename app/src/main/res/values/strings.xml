@@ -96,5 +96,6 @@
     <string name="thisRpt">This report will be permanently removed and you cannot see it again.Are you sure you want to delete it?</string>
     <string name="rptDel">Report has been deleted</string>
     <string name="plsRpt">please wait , report is deleting</string>
+    <string name="pstBBY">Posted by: {0}</string>
 
 </resources>

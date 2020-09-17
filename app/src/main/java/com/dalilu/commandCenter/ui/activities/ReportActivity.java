@@ -65,7 +65,9 @@ public class ReportActivity extends BaseActivity {
     private StorageReference filePath;
     private Uri uri = null;
     private ProgressDialog pd;
-    private CollectionReference alertCollectionReference;
+    public static CollectionReference alertCollectionReference = FirebaseFirestore
+            .getInstance()
+            .collection("Alerts");
     private static String uid;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -147,7 +149,7 @@ public class ReportActivity extends BaseActivity {
 
         StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("alerts");
         filePath = imageStorageRef.child(UUID.randomUUID().toString());
-        alertCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
+        // alertCollectionReference = FirebaseFirestore.getInstance().collection("Alerts");
         imgPhoto = activityReportBinding.imgAlertPhoto;
         videoView = activityReportBinding.videoView;
         btnUpload = activityReportBinding.btnUpload;
