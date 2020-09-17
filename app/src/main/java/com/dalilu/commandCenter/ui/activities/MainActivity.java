@@ -239,7 +239,7 @@ public class MainActivity extends BaseActivity implements
 
         Intent intent = new Intent(this, ReportActivity.class);
         startActivity(intent);
-        //  finish();
+        finish();
 
     }
 
@@ -346,7 +346,7 @@ public class MainActivity extends BaseActivity implements
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        registration.remove();
+//        registration.remove();
 
     }
 

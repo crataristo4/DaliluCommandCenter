@@ -78,6 +78,7 @@ public class ReportActivity extends BaseActivity {
     public static final String KEY_IMAGE_STORAGE_PATH = "image_path";
     // Bitmap sampling size
     public static final int BITMAP_SAMPLE_SIZE = 8;
+    StringBuilder addressBuilder;
 
 
     @Override
@@ -88,6 +89,8 @@ public class ReportActivity extends BaseActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
+        addressBuilder = new StringBuilder();
+
 
         if (firebaseUser != null) {
 
@@ -141,18 +144,6 @@ public class ReportActivity extends BaseActivity {
 
 
         }
-/*
-
-        Intent getUserDetailsIntent = getIntent();
-        if (getUserDetailsIntent != null) {
-            userName = getUserDetailsIntent.getStringExtra(AppConstants.USER_NAME);
-            userPhotoUrl = getUserDetailsIntent.getStringExtra(AppConstants.USER_PHOTO_URL);
-            userId = getUserDetailsIntent.getStringExtra(AppConstants.UID);
-            phoneNumber = getUserDetailsIntent.getStringExtra(AppConstants.PHONE_NUMBER);
-
-        }
-*/
-
 
         StorageReference imageStorageRef = FirebaseStorage.getInstance().getReference().child("alerts");
         filePath = imageStorageRef.child(UUID.randomUUID().toString());
@@ -321,10 +312,9 @@ public class ReportActivity extends BaseActivity {
 
         } else {
             pd.show();
-            StringBuilder addressBuilder = new StringBuilder();
-            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
+           /* @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
             String dateReported = dateFormat.format(Calendar.getInstance().getTime());
-
+*/
             addressBuilder.append(knownName).append(",").append(state).append(",").append(country);
 
             if (type.equals("image")) {
@@ -352,7 +342,9 @@ public class ReportActivity extends BaseActivity {
                     assert downLoadUri != null;
                     String url = downLoadUri.toString();
 
-                    Map<String, Object> alertItems = new HashMap<>();
+                    alertItem(type, url);
+
+           /*         Map<String, Object> alertItems = new HashMap<>();
                     alertItems.put("userName", userName);
                     alertItems.put("userPhotoUrl", userPhotoUrl);
                     alertItems.put("url", url);
@@ -366,17 +358,22 @@ public class ReportActivity extends BaseActivity {
                     alertItems.put("isSolved", false);
 
 
-                    alertCollectionReference.add(alertItems);
-                    String id = MainActivity.userId;
-                    Log.i(TAG, "uploadToServer: " + addressBuilder.toString());
+                    alertCollectionReference.add(alertItems).addOnCompleteListener(ReportActivity.this, task -> {
+                        if (task.isSuccessful()) {
 
-                    startActivity(new Intent(ReportActivity.this, MainActivity.class)
-                            .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
-                            .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
-                            .putExtra(AppConstants.USER_NAME, userName)
-                            .putExtra(AppConstants.UID, userId));
-                    finish();
+                            pd.dismiss();
+                            DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
+                            gotoMain();
+
+
+                        } else {
+                            pd.dismiss();
+                            DisplayViewUI.displayToast(this, Objects.requireNonNull(task.getException()).getMessage());
+
+                        }
+
+                    });*/
 
                 }).addOnFailureListener(this, e -> {
                     pd.dismiss();
@@ -401,7 +398,9 @@ public class ReportActivity extends BaseActivity {
                         assert downLoadUri != null;
                         String url = downLoadUri.toString();
 
-                        Map<String, Object> alertItems = new HashMap<>();
+                        alertItem(type, url);
+
+                      /*  Map<String, Object> alertItems = new HashMap<>();
                         alertItems.put("userName", userName);
                         alertItems.put("userPhotoUrl", userPhotoUrl);
                         alertItems.put("url", url);
@@ -415,7 +414,7 @@ public class ReportActivity extends BaseActivity {
                         alertItems.put("isSolved", false);
 
 
-                        //fire store cloud store
+                        //cloud store
                         alertCollectionReference.add(alertItems).addOnCompleteListener(task2 -> {
 
                             if (task2.isSuccessful()) {
@@ -423,12 +422,7 @@ public class ReportActivity extends BaseActivity {
                                 pd.dismiss();
                                 DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
 
-                          /*  startActivity(new Intent(ReportActivity.this, MainActivity.class)
-                                    .putExtra(AppConstants.PHONE_NUMBER, phoneNumber)
-                                    .putExtra(AppConstants.USER_PHOTO_URL, userPhotoUrl)
-                                    .putExtra(AppConstants.USER_NAME, userName)
-                                    .putExtra(AppConstants.UID, userId));*/
-                                finish();
+                                gotoMain();
 
 
                             } else {
@@ -437,7 +431,7 @@ public class ReportActivity extends BaseActivity {
 
                             }
 
-                        });
+                        });*/
 
                     } else {
                         pd.dismiss();
@@ -603,7 +597,12 @@ public class ReportActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        gotoMain();
+    }
+
+    void gotoMain() {
+        startActivity(new Intent(this, MainActivity.class));
+        finishAffinity();
     }
 
     @Override
@@ -623,4 +622,47 @@ public class ReportActivity extends BaseActivity {
             longitude = LocationUpdatesService.lng;
         }
     }
+
+
+    void alertItem(String type, String downloadUrl) {
+
+        @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:MM a");
+        String dateReported = dateFormat.format(Calendar.getInstance().getTime());
+
+        Map<String, Object> alertItems = new HashMap<>();
+        alertItems.put("userName", userName);
+        alertItems.put("userPhotoUrl", userPhotoUrl);
+        alertItems.put("url", downloadUrl);
+        alertItems.put(type, type);
+        alertItems.put("coordinates", new GeoPoint(latitude, longitude));
+        alertItems.put("address", addressBuilder.toString());
+        alertItems.put("userId", userId);
+        alertItems.put("phoneNumber", phoneNumber);
+        alertItems.put("timeStamp", GetTimeAgo.getTimeInMillis());
+        alertItems.put("dateReported", dateReported);
+        alertItems.put("isSolved", false);
+
+
+        //upload to server
+        alertCollectionReference.add(alertItems).addOnCompleteListener(task -> {
+
+            if (task.isSuccessful()) {
+
+                pd.dismiss();
+                DisplayViewUI.displayToast(ReportActivity.this, getString(R.string.reportSuccess));
+
+                gotoMain();
+
+
+            } else {
+                pd.dismiss();
+                DisplayViewUI.displayToast(this, Objects.requireNonNull(task.getException()).getMessage());
+
+            }
+        });
+
+
+    }
+
+
 }
