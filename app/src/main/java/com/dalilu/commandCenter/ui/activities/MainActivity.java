@@ -26,6 +26,10 @@ import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -125,7 +129,7 @@ public class MainActivity extends BaseActivity implements
 
 
         initViews();
-        runOnUiThread(this::fetchData);
+        // runOnUiThread(this::fetchData);
     }
 
     private void fetchData() {
@@ -186,22 +190,31 @@ public class MainActivity extends BaseActivity implements
 
     }
 
+
     private void initViews() {
         BottomNavigationView navView = activityMainBinding.navView;
         Menu menu = navView.getMenu();
         MenuItem menuItemHome = menu.findItem(R.id.navigation_home);
+
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.navigation_home)
+                .build();
+
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(navView, navController);
 
         state = BaseActivity.state;
         knownName = BaseActivity.knownName;
         country = BaseActivity.country;
 
 
-        recyclerView = activityMainBinding.recyclerViewHome;
+       /* recyclerView = activityMainBinding.recyclerViewHome;
         recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(layoutManager);
         adapter = new HomeRecyclerAdapter(arrayList, this);
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(adapter);*/
 
         navView.setOnNavigationItemReselectedListener(item -> {
 
@@ -303,7 +316,7 @@ public class MainActivity extends BaseActivity implements
         LocalBroadcastManager.getInstance(this).registerReceiver(myReceiver,
                 new IntentFilter(LocationUpdatesService.ACTION_BROADCAST));
 
-        if (mBundleState != null) {
+      /*  if (mBundleState != null) {
 
             new Handler().postDelayed(() -> {
 
@@ -312,7 +325,7 @@ public class MainActivity extends BaseActivity implements
             }, 50);
         }
 
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setLayoutManager(layoutManager);*/
 
     }
 
@@ -341,9 +354,9 @@ public class MainActivity extends BaseActivity implements
     public void onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(myReceiver);
         super.onPause();
-        mBundleState = new Bundle();
+       /* mBundleState = new Bundle();
         mState = layoutManager.onSaveInstanceState();
-        mBundleState.putParcelable(KEY, mState);
+        mBundleState.putParcelable(KEY, mState);*/
     }
 
     /**

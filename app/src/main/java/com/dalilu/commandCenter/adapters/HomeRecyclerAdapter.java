@@ -34,6 +34,7 @@ import com.dalilu.commandCenter.databinding.VideoTypeGridBinding;
 import com.dalilu.commandCenter.model.AlertItems;
 import com.dalilu.commandCenter.ui.activities.CommentsActivity;
 import com.dalilu.commandCenter.ui.activities.ImageViewActivity;
+import com.dalilu.commandCenter.ui.activities.VideoViewActivity;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.dalilu.commandCenter.utils.GetTimeAgo;
@@ -183,6 +184,19 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     });
 
+                    ((VideoTypeViewHolder) holder).videoView.setOnClickListener(view -> {
+                        Intent vid = new Intent(view.getContext(), VideoViewActivity.class);
+                        vid.putExtra(AppConstants.UID, object.getId());
+                        vid.putExtra(AppConstants.OBJECT_URL, object.getUrl());
+                        vid.putExtra(AppConstants.KNOWN_LOCATION, object.address);
+                        vid.putExtra(AppConstants.IS_SOLVED, object.isSolved);
+                        vid.putExtra(AppConstants.TIME_STAMP, object.getTimeStamp());
+                        vid.putExtra(AppConstants.USER_NAME, object.getUserName());
+
+                        view.getContext().startActivity(vid);
+
+                    });
+
 
                     break;
                 case AppConstants.IMAGE_TYPE:
@@ -288,7 +302,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 imgChecked.setVisibility(View.GONE);
                 frameLayout.setVisibility(View.GONE);
                 rippleBackground.startRippleAnimation();
-                videoView.setVisibility(View.GONE);
+                //videoView.setVisibility(View.GONE);
 
 /*
                 if (!mediaPlayer.isPlaying()) {
