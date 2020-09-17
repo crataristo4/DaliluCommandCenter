@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
@@ -19,7 +18,6 @@ import com.dalilu.commandCenter.databinding.ActivityVideoViewBinding;
 import com.dalilu.commandCenter.utils.AppConstants;
 import com.dalilu.commandCenter.utils.DisplayViewUI;
 import com.danikula.videocache.HttpProxyCacheServer;
-import com.google.android.gms.tasks.Task;
 
 import java.text.MessageFormat;
 import java.util.Objects;
@@ -108,20 +106,6 @@ public class VideoViewActivity extends AppCompatActivity {
 
     }
 
-    private void onComplete(@NonNull Task<Void> task) {
-        ProgressDialog loading = DisplayViewUI.displayProgress(this, getString(R.string.plsRpt));
-        loading.show();
-
-        if (task.isSuccessful()) {
-            loading.dismiss();
-            DisplayViewUI.displayToast(VideoViewActivity.this, getString(R.string.rptDel));
-
-            gotoMain();
-        } else {
-            loading.dismiss();
-            DisplayViewUI.displayToast(VideoViewActivity.this, Objects.requireNonNull(task.getException()).getMessage());
-        }
-    }
 
     void gotoMain() {
         startActivity(new Intent(this, MainActivity.class));
@@ -130,6 +114,6 @@ public class VideoViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        gotoMain();
+        super.onBackPressed();
     }
 }

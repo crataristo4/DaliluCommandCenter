@@ -39,6 +39,8 @@
         tools:targetApi="q">
         <activity
             android:name=".ui.activities.VideoViewActivity"
+            android:rotationAnimation="jumpcut"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- Foreground services in Q+ require type. -->
         <service
@@ -50,7 +52,7 @@
         <activity
             android:name=".ui.activities.ImageViewActivity"
             android:rotationAnimation="seamless"
-            android:screenOrientation="fullUser"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <meta-data
@@ -67,7 +69,7 @@
             android:name=".ui.activities.MainActivity"
             android:alwaysRetainTaskState="true"
             android:label="@string/app_name"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

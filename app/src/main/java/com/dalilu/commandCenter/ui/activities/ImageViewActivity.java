@@ -86,7 +86,7 @@ public class ImageViewActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        gotoMain();
+        super.onBackPressed();
     }
 
     void gotoMain() {
