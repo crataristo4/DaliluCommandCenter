@@ -63,18 +63,20 @@ public class HomeFragment extends Fragment {
 
 
     private void initViews() {
-
         recyclerView = fragmentHomeBinding.recyclerViewHome;
         recyclerView.setHasFixedSize(true);
-
-        //  layoutManager = new LinearLayoutManager(getActivity());
-
         layoutManager = new GridLayoutManager(getActivity(), 2);
 
         recyclerView.setLayoutManager(layoutManager);
         adapter = new HomeRecyclerAdapter(arrayList, getContext());
         recyclerView.setAdapter(adapter);
 
+        new Handler().postDelayed(() -> {
+            fragmentHomeBinding.pbHomeLoading.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+
+
+        }, 5000);
 
     }
 

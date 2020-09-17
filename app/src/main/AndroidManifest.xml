@@ -37,7 +37,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="q">
-        <activity android:name=".ui.activities.VideoViewActivity"></activity>
+        <activity
+            android:name=".ui.activities.VideoViewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <!-- Foreground services in Q+ require type. -->
         <service
             android:name=".services.LocationUpdatesService"
