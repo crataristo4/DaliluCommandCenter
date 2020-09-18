@@ -16,6 +16,7 @@ import android.widget.VideoView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -184,7 +185,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
                     });
 
-                    ((VideoTypeViewHolder) holder).videoView.setOnClickListener(view -> {
+                    ((VideoTypeViewHolder) holder).cardView.setOnClickListener(view -> {
                         Intent vid = new Intent(view.getContext(), VideoViewActivity.class);
                         vid.putExtra(AppConstants.UID, object.getId());
                         vid.putExtra(AppConstants.OBJECT_URL, object.getUrl());
@@ -244,7 +245,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     //shows the number of comments on the post
                     numOfComments(((ImageTypeViewHolder) holder).txtComments, object.getId());
 
-                    ((ImageTypeViewHolder) holder).imgAlertPhoto.setOnClickListener(view -> {
+                    ((ImageTypeViewHolder) holder).cardView.setOnClickListener(view -> {
                         Intent img = new Intent(view.getContext(), ImageViewActivity.class);
                         img.putExtra(AppConstants.UID, object.getId());
                         img.putExtra(AppConstants.OBJECT_URL, object.getUrl());
@@ -277,6 +278,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final VideoTypeGridBinding videoTypeBinding;
         final VideoView videoView;
         final FrameLayout frameLayout;
+        final CardView cardView;
         final RippleBackground rippleBackground;
         //  final MediaPlayer mediaPlayer;
         final ImageView imgChecked;
@@ -290,6 +292,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             rippleBackground = videoTypeBinding.rippleContent;
             imgChecked = videoTypeBinding.imgChecked;
             txtComments = videoTypeBinding.txtComments;
+            cardView = videoTypeBinding.cardView;
             //   mediaPlayer = MediaPlayer.create(videoTypeBinding.getRoot().getContext(), R.raw.alarm);
 
         }
@@ -352,6 +355,8 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         final TextView txtComments;
         final ImageView imgAlertPhoto, imgChecked;
         final RippleBackground rippleBackground;
+        final CardView cardView;
+
         //  final MediaPlayer mediaPlayer;
 
 
@@ -362,6 +367,7 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             rippleBackground = imageTypeBinding.rippleContent;
             imgAlertPhoto = imageTypeBinding.imgContentPhoto;
             imgChecked = imageTypeBinding.imgChecked;
+            cardView = imageTypeBinding.cardView;
             //   mediaPlayer = MediaPlayer.create(imageTypeBinding.getRoot().getContext(), R.raw.alarm);
 
 
