@@ -39,7 +39,7 @@
         tools:targetApi="q">
         <activity
             android:name=".ui.activities.VideoViewActivity"
-            android:rotationAnimation="jumpcut"
+            android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <!-- Foreground services in Q+ require type. -->
@@ -51,7 +51,7 @@
 
         <activity
             android:name=".ui.activities.ImageViewActivity"
-            android:rotationAnimation="seamless"
+            android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
@@ -64,6 +64,8 @@
 
         <activity
             android:name=".MapsActivity"
+            android:alwaysRetainTaskState="true"
+            android:screenOrientation="portrait"
             android:label="@string/title_activity_maps" />
         <activity
             android:name=".ui.activities.MainActivity"
@@ -99,11 +101,12 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".auth.RegisterPhoneNumberActivity"
+            android:finishOnTaskLaunch="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.activities.ReportActivity"
-            android:rotationAnimation="seamless"
+            android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -135,13 +138,14 @@
         </activity>
         <activity
             android:name=".ui.activities.CommentsActivity"
+            android:alwaysRetainTaskState="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Base.Theme.AppCompat" />
-        <activity android:name=".auth.PhoneAuthActivity"></activity>
+        <activity android:name=".auth.PhoneAuthActivity" />
     </application>
 
 </manifest>

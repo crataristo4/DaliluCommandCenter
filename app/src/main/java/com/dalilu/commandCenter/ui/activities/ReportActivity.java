@@ -21,6 +21,7 @@ import android.widget.VideoView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.databinding.DataBindingUtil;
 
 import com.dalilu.commandCenter.R;
@@ -81,7 +82,7 @@ public class ReportActivity extends BaseActivity {
     // Bitmap sampling size
     public static final int BITMAP_SAMPLE_SIZE = 8;
     StringBuilder addressBuilder;
-
+    ConstraintLayout constraintLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +93,8 @@ public class ReportActivity extends BaseActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         addressBuilder = new StringBuilder();
+
+        constraintLayout = activityReportBinding.constrainReport;
 
 
         if (firebaseUser != null) {
@@ -303,7 +306,7 @@ public class ReportActivity extends BaseActivity {
 
     private void uploadToServer(Uri imageUri, String type) throws IOException {
 
-        if (address == null && state == null && country == null && knownName == null && latitude == 0.0 && longitude == 0.0) {
+        if (address == null && state == null && country == null && knownName == null || latitude == 0.0 || longitude == 0.0) {
 
             DisplayViewUI.displayAlertDialog(this,
                     "Error",
@@ -478,14 +481,13 @@ public class ReportActivity extends BaseActivity {
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // user cancelled Image capture
-                Toast.makeText(ReportActivity.this,
-                        R.string.captureCanceled, Toast.LENGTH_SHORT)
-                        .show();
+                DisplayViewUI.displaySnackBar(constraintLayout, getString(R.string.captureCanceled));
+
             } else {
                 // failed to capture image
-                Toast.makeText(ReportActivity.this,
-                        R.string.failedToCapture, Toast.LENGTH_SHORT)
-                        .show();
+                // failed to capture image
+                DisplayViewUI.displaySnackBar(constraintLayout, getString(R.string.failedToCapture));
+
             }
         } else if (requestCode == AppConstants.CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
@@ -510,14 +512,12 @@ public class ReportActivity extends BaseActivity {
 
             } else if (resultCode == Activity.RESULT_CANCELED) {
                 // user cancelled recording
-                Toast.makeText(ReportActivity.this,
-                        R.string.vidRecCanceled, Toast.LENGTH_SHORT)
-                        .show();
+                DisplayViewUI.displaySnackBar(constraintLayout, getString(R.string.vidRecCanceled));
+
             } else {
                 // failed to record video
-                Toast.makeText(ReportActivity.this,
-                        R.string.sorryVidFailed, Toast.LENGTH_SHORT)
-                        .show();
+                DisplayViewUI.displaySnackBar(constraintLayout, getString(R.string.sorryVidFailed));
+
             }
         }
     }

@@ -160,22 +160,28 @@ public class HomeRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(((VideoTypeViewHolder) holder).videoTypeBinding.imgUserPhoto);
 
-                    HttpProxyCacheServer proxy = Dalilu.getProxy(((VideoTypeViewHolder) holder).videoTypeBinding.getRoot().getContext());
-                    String proxyUrl = proxy.getProxyUrl(object.getUrl());
+                    try {
+                        HttpProxyCacheServer proxy = Dalilu.getProxy(((VideoTypeViewHolder) holder).videoTypeBinding.getRoot().getContext());
+                        String proxyUrl = proxy.getProxyUrl(object.getUrl());
 
 
-                    ((VideoTypeViewHolder) holder).videoView.setVideoPath(proxyUrl);
-                    //   ((VideoTypeViewHolder) holder).videoView.requestFocusFromTouch();
+                        ((VideoTypeViewHolder) holder).videoView.setVideoPath(proxyUrl);
+                        //   ((VideoTypeViewHolder) holder).videoView.requestFocusFromTouch();
 
-                    MediaController mediaController = new MediaController(((VideoTypeViewHolder) holder).videoTypeBinding.getRoot().getContext());
-                    ((VideoTypeViewHolder) holder).videoView.setMediaController(mediaController);
-                    mediaController.setAnchorView(((VideoTypeViewHolder) holder).videoView);
-                    FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-                    lp.gravity = Gravity.BOTTOM;
-                    mediaController.setLayoutParams(lp);
-                    ((ViewGroup) mediaController.getParent()).removeView(mediaController);
+                        MediaController mediaController = new MediaController(((VideoTypeViewHolder) holder).videoTypeBinding.getRoot().getContext());
+                        ((VideoTypeViewHolder) holder).videoView.setMediaController(mediaController);
+                        mediaController.setAnchorView(((VideoTypeViewHolder) holder).videoView);
+                        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+                        lp.gravity = Gravity.BOTTOM;
+                        mediaController.setLayoutParams(lp);
+                        ((ViewGroup) mediaController.getParent()).removeView(mediaController);
+                        ((VideoTypeViewHolder) holder).frameLayout.addView(mediaController);
 
-                    ((VideoTypeViewHolder) holder).frameLayout.addView(mediaController);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
 
                     //comment on click
                     ((VideoTypeViewHolder) holder).txtComments.setOnClickListener(view -> {

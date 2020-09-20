@@ -8,12 +8,15 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 
 import com.dalilu.commandCenter.R;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Objects;
 import java.util.Random;
@@ -95,6 +98,13 @@ public class DisplayViewUI {
         if (btnPos != null) builder.setPositiveButton(btnPos, onClickListener);
         builder.setIcon(ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_forever));
         builder.show();
+    }
+
+    public static void displaySnackBar(@NonNull View ctx, String message) {
+
+        Snackbar snackbar = Snackbar.make(ctx, message, Snackbar.LENGTH_LONG);
+        snackbar.show();
+
     }
 
     static public boolean isNetworkConnected(Context context) {

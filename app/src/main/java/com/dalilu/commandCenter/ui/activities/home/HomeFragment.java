@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
     public void onStop() {
         super.onStop();
         //activityItemAdapter.stopListening();
-        registration.remove();
+        //  registration.remove();
     }
 
     @Override
