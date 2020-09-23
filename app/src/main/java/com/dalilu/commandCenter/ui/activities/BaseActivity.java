@@ -83,6 +83,7 @@ public class BaseActivity extends AppCompatActivity {
      */
     private Boolean mRequestingLocationUpdates;
     private Geocoder geocoder;
+    Bundle bundle;
 
     public static Context getAppContext() {
         return (Context) mContext;
